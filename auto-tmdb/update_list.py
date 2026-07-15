@@ -93,17 +93,22 @@ def update_tmdb_list(list_name, items):
     if not list_id:
         return
 
-    # Krok 1: Wyczyszczenie listy
-    clear_url = f"https://api.themoviedb.org/4/list/{list_id}/clear"
-    requests.get(clear_url, headers=headers)
-    
+    # Krok 1: Wyczyszczenie listy (tylko jeśli parametr clear jest ustawiony na True)
+    if clear:
+        print(f"Czyszczenie listy '{list_name}' przed dodaniem nowych pozycji...")
+        clear_url = f"https://api.themoviedb.org/4/list/{list_id}/clear"
+        # API v4 wymaga metody POST do czyszczenia listy
+        res_clear = requests.post(clear_url, headers=headers)
+        if res_clear.status_code != 200:
+            print(f"Problem z czyszczeniem listy '{list_name}': {res_clear.text}")
+
     if not items:
-        print(f"Lista '{list_name}' została wyczyszczona (brak nowych filmów/seriali).")
+        print(f"Brak nowych filmów/seriali dla '{list_name}'.")
         return
 
-    # Krok 2: Dodanie nowych elementów (maksymalnie 50 - ograniczenie TMDB na jeden request)
+    # Krok 2: Dodanie nowych elementów (maksymalnie 20 - ograniczenie TMDB na jeden request)
     add_url = f"https://api.themoviedb.org/4/list/{list_id}/items"
-    payload = {"items": items[:50]} # bierzemy top 50 wyników
+    payload = {"items": items[:20]} # bierzemy top 50 wyników
     res = requests.post(add_url, headers=headers, json=payload)
     if res.status_code == 200:
         print(f"Zaktualizowano listę '{list_name}' - dodano {len(payload['items'])} pozycji.")
@@ -171,88 +176,88 @@ for prov_name, prov_id in PROVIDERS.items():
 # ------------------------------------------
 # 2.2 GATUNKI OGÓLNE (PO POPULARNOŚCI)
 # ------------------------------------------
-print("\n--- Generowanie list: Gatunki Ogólne (2026) ---")
-for g_name, g_id in GENRES_MOVIES.items():
-    list_name = f"{g_name} ({CURRENT_YEAR})"
-    params = {
-        "primary_release_year": CURRENT_YEAR,
-        "with_genres": g_id,
-        "sort_by": "popularity.desc"
-    }
-    items = discover_media("movie", params)
-    update_tmdb_list(list_name, items)
-    time.sleep(0.3)
+#print("\n--- Generowanie list: Gatunki Ogólne (2026) ---")
+#for g_name, g_id in GENRES_MOVIES.items():
+#    list_name = f"{g_name} ({CURRENT_YEAR})"
+#    params = {
+#        "primary_release_year": CURRENT_YEAR,
+#        "with_genres": g_id,
+#        "sort_by": "popularity.desc"
+#    }
+#    items = discover_media("movie", params)
+#    update_tmdb_list(list_name, items)
+#    time.sleep(0.3)
 
 # ------------------------------------------
 # 2.3 DEKADY
 # ------------------------------------------
-print("\n--- Generowanie list: Dekady (Filmy) ---")
-for dec_name, (start_date, end_date) in DECADES.items():
-    for g_name, g_id in GENRES_MOVIES.items():
-        list_name = f"{dec_name}: {g_name}"
-        params = {
-            "primary_release_date.gte": start_date,
-            "primary_release_date.lte": end_date,
-            "with_genres": g_id,
-            "sort_by": "popularity.desc"
-        }
-        items = discover_media("movie", params)
-        update_tmdb_list(list_name, items)
-        time.sleep(0.3)
+#print("\n--- Generowanie list: Dekady (Filmy) ---")
+#for dec_name, (start_date, end_date) in DECADES.items():
+#    for g_name, g_id in GENRES_MOVIES.items():
+#        list_name = f"{dec_name}: {g_name}"
+#        params = {
+#            "primary_release_date.gte": start_date,
+#            "primary_release_date.lte": end_date,
+#            "with_genres": g_id,
+#            "sort_by": "popularity.desc"
+#        }
+#        items = discover_media("movie", params)
+#        update_tmdb_list(list_name, items)
+#        time.sleep(0.5)
 
-# ------------------------------------------
-# 2.5 i 2.6 NOWOŚCI (FILMY & SERIALE)
-# ------------------------------------------
-print("\n--- Generowanie list: Nowości Filmy i Seriale ---")
-for g_dict, is_keyword, m_type in [(GENRES_MOVIES, False, "movie"), (ADDITIONAL_GENRES_MOVIES, True, "movie")]:
-    for g_name, g_val in g_dict.items():
-        list_name = f"Nowości - Filmy: {g_name} ({CURRENT_YEAR})"
-        params = {"primary_release_year": CURRENT_YEAR, "sort_by": "release_date.desc"}
-        params["with_keywords" if is_keyword else "with_genres"] = g_val
-        items = discover_media("movie", params)
-        update_tmdb_list(list_name, items)
-        time.sleep(0.3)
+# ==========================================
+# 2.5 i 2.6 NOWOŚCI (FILMY & SERIALE) - OGÓLNE
+# ==========================================
+print("\n--- Generowanie list: Ogólne Nowości Filmy i Seriale ---")
 
-for g_dict, is_keyword, m_type in [(GENRES_SERIES, False, "tv"), (ADDITIONAL_GENRES_SERIES, True, "tv")]:
-    for g_name, g_val in g_dict.items():
-        list_name = f"Nowości - Seriale: {g_name} ({CURRENT_YEAR})"
-        params = {"first_air_date_year": CURRENT_YEAR, "sort_by": "first_air_date.desc"}
-        params["with_keywords" if is_keyword else "with_genres"] = g_val
-        items = discover_media("tv", params)
-        update_tmdb_list(list_name, items)
-        time.sleep(0.3)
+# 1. Ogólne Nowości Filmy
+list_name_movies = f"Nowości - Filmy ({CURRENT_YEAR})"
+params_movies = {
+    "primary_release_year": CURRENT_YEAR, 
+    "sort_by": "release_date.desc"
+}
+items_movies = discover_media("movie", params_movies)
+update_tmdb_list(list_name_movies, items_movies)
+time.sleep(0.5)
 
-# ------------------------------------------
-# 2.7 i 2.8 NADCHODZĄCE PREMIERY
-# ------------------------------------------
-print("\n--- Generowanie list: Nadchodzące Premiery ---")
+# 2. Ogólne Nowości Seriale
+list_name_series = f"Nowości - Seriale ({CURRENT_YEAR})"
+params_series = {
+    "first_air_date_year": CURRENT_YEAR, 
+    "sort_by": "first_air_date.desc"
+}
+items_series = discover_media("tv", params_series)
+update_tmdb_list(list_name_series, items_series)
+time.sleep(0.5)
+
+
+# ==========================================
+# 2.7 i 2.8 NADCHODZĄCE PREMIERY - OGÓLNE
+# ==========================================
+print("\n--- Generowanie list: Ogólne Nadchodzące Premiery ---")
 today = datetime.date.today().isoformat()
 end_of_year = f"{CURRENT_YEAR}-12-31"
 
-for g_dict, is_keyword in [(GENRES_MOVIES, False), (ADDITIONAL_GENRES_MOVIES, True)]:
-    for g_name, g_val in g_dict.items():
-        list_name = f"Nadchodzące Premiery - Filmy: {g_name} ({CURRENT_YEAR})"
-        params = {
-            "primary_release_date.gte": today,
-            "primary_release_date.lte": end_of_year,
-            "sort_by": "release_date.asc"  # sortowanie od najbliższych premier
-        }
-        params["with_keywords" if is_keyword else "with_genres"] = g_val
-        items = discover_media("movie", params)
-        update_tmdb_list(list_name, items)
-        time.sleep(0.3)
+# 3. Ogólne Nadchodzące Premiery - Filmy
+list_upcoming_movies = f"Nadchodzące Premiery - Filmy ({CURRENT_YEAR})"
+params_up_movies = {
+    "primary_release_date.gte": today,
+    "primary_release_date.lte": end_of_year,
+    "sort_by": "release_date.asc"
+}
+items_up_movies = discover_media("movie", params_up_movies)
+update_tmdb_list(list_upcoming_movies, items_up_movies, clear=True)
+time.sleep(0.5)
 
-for g_dict, is_keyword in [(GENRES_SERIES, False), (ADDITIONAL_GENRES_SERIES, True)]:
-    for g_name, g_val in g_dict.items():
-        list_name = f"Nadchodzące Premiery - Seriale: {g_name} ({CURRENT_YEAR})"
-        params = {
-            "first_air_date.gte": today,
-            "first_air_date.lte": end_of_year,
-            "sort_by": "first_air_date.asc"
-        }
-        params["with_keywords" if is_keyword else "with_genres"] = g_val
-        items = discover_media("tv", params)
-        update_tmdb_list(list_name, items)
-        time.sleep(0.3)
+# 4. Ogólne Nadchodzące Premiery - Seriale
+list_upcoming_series = f"Nadchodzące Premiery - Seriale ({CURRENT_YEAR})"
+params_up_series = {
+    "first_air_date.gte": today,
+    "first_air_date.lte": end_of_year,
+    "sort_by": "first_air_date.asc"
+}
+items_up_series = discover_media("tv", params_up_series)
+update_tmdb_list(list_upcoming_series, items_up_series, clear=True)
+time.sleep(0.5)
 
 print("\n--- CAŁY PROCES ZAKOŃCZONY POMYŚLNIE! ---")
