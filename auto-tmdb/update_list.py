@@ -171,8 +171,8 @@ print("Rozpoczynam czyszczenie konta...")
 delete_all_my_lists()
 
 # 2. DOPIERO TERAZ POBIERZ AKTUALNY STAN (który powinien być już pusty lub zawierać tylko listy spoza skryptu)
-print("\nPobieranie aktualnych list z konta...")
-fetch_user_lists()
+#print("\nPobieranie aktualnych list z konta...")
+#fetch_user_lists()
 
 # ------------------------------------------
 # 2.1 GATUNEK + PLATFORMA + OBECNY ROK
