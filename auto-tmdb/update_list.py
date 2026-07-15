@@ -449,11 +449,11 @@ for lang_name, lang_code in LANGUAGES.items():
         "with_original_language": lang_code, # <-- np. "pl", "it", "es"
     #    "with_origin_country": country_code, # <-- np. "PL", "IT", "ES"
         "without_keywords": exclude_keywords_str,
-    #    "vote_count.gte": 5,                     # Obniżony próg dla filmów lokalnych
+        "vote_count.gte": 5,                     # Obniżony próg dla filmów lokalnych
         "sort_by": "release_date.desc"
     }
     items_lang_movies = discover_media("movie", params_lang_movies)
-    update_tmdb_list(list_lang_movies, items_lang_movies)
+    update_tmdb_list(list_lang_movies, items_lang_movies, clear=True)
     time.sleep(0.5)
     
     # 2. Seriale (np. "Polskie - Seriale (2026)")
@@ -465,11 +465,11 @@ for lang_name, lang_code in LANGUAGES.items():
     #    "with_origin_country": country_code, # <-- np. "PL", "IT", "ES"
         "without_genres": exclude_genres_str,
         "without_keywords": exclude_keywords_str,
-    #    "vote_count.gte": 5,                     # Obniżony próg dla seriali lokalnych
+        "vote_count.gte": 5,                     # Obniżony próg dla seriali lokalnych
         "sort_by": "first_air_date.desc"
     }
     items_lang_series = discover_media("tv", params_lang_series)
-    update_tmdb_list(list_lang_series, items_lang_series)
+    update_tmdb_list(list_lang_series, items_lang_series, clear=True)
     time.sleep(0.5)
     
 print("\n--- CAŁY PROCES ZAKOŃCZONY POMYŚLNIE! ---")
