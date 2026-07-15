@@ -430,11 +430,13 @@ def get_date_range(mode="recent"):
         # Dynamiczne dopasowanie kodu kraju
         country_code = lang_code.upper()
         if lang_name == "Brytyjskie":
-            country_code = "GB"  # Dla języka 'en' wymuszamy Wielką Brytanię zamiast USA
+            country_code = "GB"
+        elif lang_name == "Australijskie":
+            country_code = "AU"
         elif lang_name == "Meksykańskie":
-            country_code = "MX"  # Dla języka 'es' wymuszamy Meksyk zamiast Hiszpanii
+            country_code = "MX"
         elif lang_name == "Brazylijskie":
-            country_code = "BR"  # Dla języka 'pt' wymuszamy Brazylię zamiast Portugalii
+            country_code = "BR"
         
         # 1. Filmy (np. "Polskie - Filmy (2026)")
         list_lang_movies = f"{lang_name} - Filmy ({CURRENT_YEAR})"
