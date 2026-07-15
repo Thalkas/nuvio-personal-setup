@@ -166,7 +166,12 @@ def discover_media(media_type, params):
 # ==========================================
 # URUCHOMIENIE PROCESU AKTUALIZACJI
 # ==========================================
-print("Pobieranie aktualnych list z konta...")
+# 1. NAJPIERW USUŃ STARE LISTY (wywołanie funkcji, która wcześniej była tylko zdefiniowana)
+print("Rozpoczynam czyszczenie konta...")
+delete_all_my_lists()
+
+# 2. DOPIERO TERAZ POBIERZ AKTUALNY STAN (który powinien być już pusty lub zawierać tylko listy spoza skryptu)
+print("\nPobieranie aktualnych list z konta...")
 fetch_user_lists()
 
 # ------------------------------------------
