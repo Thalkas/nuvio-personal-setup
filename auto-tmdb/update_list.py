@@ -135,6 +135,9 @@ fetch_user_lists()
 # ------------------------------------------
 print("\n--- Generowanie list: Gatunek + Platforma + Rok 2026 ---")
 for prov_name, prov_id in PROVIDERS.items():
+    # WARUNEK: Jeśli nazwa dostawcy to NIE "SkyShowTime", pomiń go
+    if prov_name != "SkyShowTime":
+        continue
     # Filmy dla standardowych gatunków i dodatkowych
     for g_dict, is_keyword in [(GENRES_MOVIES, False), (ADDITIONAL_GENRES_MOVIES, True)]:
         for g_name, g_val in g_dict.items():
