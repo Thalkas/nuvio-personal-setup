@@ -424,8 +424,15 @@ time.sleep(0.5)
     # ==========================================
 print("\n--- Generowanie list: Filmy i Seriale z Różnych Krajów (2026) ---")
 
-# Pobieramy dzisiejszą datę, aby odciąć błędne daty z przyszłości i zapowiedzi
-today_str = datetime.date.today().isoformat() 
+# 1. Pobieramy dzisiejszą datę oraz obecny rok
+today_date = datetime.date.today()
+today_str = today_date.isoformat()
+current_year = today_date.year
+
+# 2. Dynamicznie obliczamy początek bieżącej dekady (np. dla 2026 wyjdzie 2020)
+decade_start_year = (current_year // 10) * 10
+decade_start_date = f"{decade_start_year}-01-01"   # np. "2020-01-01"
+decade_suffix = f"({decade_start_year}s)"          # np. "(2020s)"
 
 for lang_name, lang_code in LANGUAGES.items():
     print(f"\nGenerowanie list dla języka: {lang_name} ({lang_code})...")
@@ -444,7 +451,7 @@ for lang_name, lang_code in LANGUAGES.items():
     # 1. Filmy (np. "Polskie - Filmy (2026)")
     list_lang_movies = f"{lang_name} - Filmy"
     params_lang_movies = {
-        "primary_release_date.gte": "2020-01-01", # <-- Pobiera filmy wydane od 1950 roku
+        "primary_release_date.gte": decade_start_date, # <-- Pobiera filmy wydane od 1950 roku
         "primary_release_date.lte": today_str,    # <-- Do dzisiaj (odcina przyszłe i puste daty)
         "with_original_language": lang_code, # <-- np. "pl", "it", "es"
     #    "with_origin_country": country_code, # <-- np. "PL", "IT", "ES"
@@ -459,7 +466,7 @@ for lang_name, lang_code in LANGUAGES.items():
     # 2. Seriale (np. "Polskie - Seriale (2026)")
     list_lang_series = f"{lang_name} - Seriale"
     params_lang_series = {
-        "first_air_date.gte": "2020-01-01", # <-- Pobiera seriale od początku 1950 roku
+        "first_air_date.gte": decade_start_date, # <-- Pobiera seriale od początku 1950 roku
         "first_air_date.lte": today_str,    # <-- Do dzisiaj (zapobiega przyszłym/błędnym datom)
         "with_original_language": lang_code, # <-- np. "pl", "it", "es"
     #    "with_origin_country": country_code, # <-- np. "PL", "IT", "ES"
