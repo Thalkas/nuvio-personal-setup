@@ -85,12 +85,17 @@ DECADES = {
 }
 
 LANGUAGES = {
-    "Polskie": "pl",
-    "Włoskie": "it",
-    "Hiszpańskie": "es",
-    "Francuskie": "fr",
-    "Czeskie": "cs",
-    "Niemieckie": "de",
-    "Koreańskie": "ko",
-    "Japońskie": "ja"
+    "Polski": "pl"
+    #"Francuski": "fr",
+    #"Hiszpański": "es",
+    #"Japoński": "ja"
+    #"Niemiecki": "de",
+    #"Portugalski": "pt",
+    #"Chiński": "zh",
+    #"Włoski": "it",
+    #"Rosyjski": "ru",
+    #"Koreańskie": "ko",
+    #"Czeskie": "cs",
+    #"Arabski": "ar",
+    #"Holenderski": "nl"
 }
