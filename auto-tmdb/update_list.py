@@ -205,6 +205,38 @@ def discover_media(media_type, params, max_pages=5):
         
     return [{"media_type": media_type, "media_id": item["id"]} for item in all_results]
 
+def get_date_range(mode="recent"):
+    """
+    Zwraca zakres dat (start_date, end_date) w formacie YYYY-MM-DD.
+    
+    Dla mode="recent":
+      - start: 1. dzień poprzedniego miesiąca.
+      - end: Ostatni dzień bieżącego miesiąca.
+      
+    Dla mode="upcoming":
+      - start: Jutro.
+      - end: Za dokładnie 90 dni (ok. 3 miesiące).
+    """
+    today = datetime.date.today()
+    
+    if mode == "upcoming":
+        start_date = today + datetime.timedelta(days=1)
+        end_date = today + datetime.timedelta(days=90)
+        return start_date.isoformat(), end_date.isoformat()
+        
+    # Domyślna logika dla "recent"
+    if today.month == 1:
+        start_date = datetime.date(today.year - 1, 12, 1)
+    else:
+        start_date = datetime.date(today.year, today.month - 1, 1)
+        
+    if today.month == 12:
+        end_date = datetime.date(today.year, 12, 31)
+    else:
+        end_date = datetime.date(today.year, today.month + 1, 1) - datetime.timedelta(days=1)
+        
+    return start_date.isoformat(), end_date.isoformat()
+
 # ==========================================
 # URUCHOMIENIE PROCESU AKTUALIZACJI
 # ==========================================
@@ -219,18 +251,26 @@ fetch_user_lists()
 # ------------------------------------------
 # 2.1 GATUNEK + PLATFORMA + OBECNY ROK
 # ------------------------------------------
-print("\n--- Generowanie list: Gatunek + Platforma + Rok 2026 ---")
+print("\n--- Generowanie list: Gatunek + Platforma + Rok 2026 (Dynamiczne Daty) ---")
+
+# Pobieramy dynamiczne daty dla nowości (poprzedni miesiąc + obecny)
+start_date, end_date = get_date_range(mode="recent")
+print(f"Filtrowanie premier w zakresie od {start_date} do {end_date}")
+
 for prov_name, prov_id in PROVIDERS.items():
-    # WARUNEK: Jeśli nazwa dostawcy to NIE "SkyShowTime", pomiń go
-    #if prov_name != "SkyShowTime":
-    #    continue
-    # Filmy dla standardowych gatunków i dodatkowych
+    # Odkomentuj jeśli chcesz testować tylko na SkyShowTime:
+    # if prov_name != "SkyShowTime":
+    #     continue
+
+    # 1. Filmy dla standardowych gatunków i dodatkowych
     for g_dict, is_keyword in [(GENRES_MOVIES, False), (ADDITIONAL_GENRES_MOVIES, True)]:
         for g_name, g_val in g_dict.items():
             list_name = f"{prov_name}: {g_name} ({CURRENT_YEAR})"
             params = {
-                "primary_release_year": CURRENT_YEAR,
+                "primary_release_date.gte": start_date,
+                "primary_release_date.lte": end_date,
                 "with_watch_providers": prov_id,
+                "watch_region": REGION,
                 "sort_by": "release_date.desc"
             }
             if is_keyword:
@@ -242,12 +282,13 @@ for prov_name, prov_id in PROVIDERS.items():
             update_tmdb_list(list_name, items)
             time.sleep(0.3)
 
-    # Seriale dla standardowych gatunków i dodatkowych
+    # 2. Seriale dla standardowych gatunków i dodatkowych
     for g_dict, is_keyword in [(GENRES_SERIES, False), (ADDITIONAL_GENRES_SERIES, True)]:
         for g_name, g_val in g_dict.items():
             list_name = f"{prov_name} (Seriale): {g_name} ({CURRENT_YEAR})"
             params = {
-                "first_air_date_year": CURRENT_YEAR,
+                "first_air_date.gte": start_date,
+                "first_air_date.lte": end_date,
                 "with_watch_providers": prov_id,
                 "watch_region": REGION,
                 "sort_by": "first_air_date.desc"
@@ -302,7 +343,7 @@ print("\n--- Generowanie list: Ogólne Nowości Filmy i Seriale ---")
 list_name_movies = f"Nowości - Filmy ({CURRENT_YEAR})"
 params_movies = {
     "primary_release_year": CURRENT_YEAR,
-    "vote_count.gte": 20,
+    "vote_count.gte": 50,
     "sort_by": "release_date.desc"
 }
 items_movies = discover_media("movie", params_movies)
@@ -322,31 +363,33 @@ time.sleep(0.5)
 
 
 # ==========================================
-# 2.7 i 2.8 NADCHODZĄCE PREMIERY - OGÓLNE
+# 2.7 i 2.8 NADCHODZĄCE PREMIERY - OGÓLNE (DYNAMICZNE OKNO +3 MIESIĄCE)
 # ==========================================
-print("\n--- Generowanie list: Ogólne Nadchodzące Premiery ---")
-today = datetime.date.today().isoformat()
-end_of_year = f"{CURRENT_YEAR}-12-31"
+print("\n--- Generowanie list: Ogólne Nadchodzące Premiery (Dynamiczne Daty) ---")
+
+# Pobieramy zakres: od jutra do +90 dni
+upcoming_start, upcoming_end = get_date_range(mode="upcoming")
+print(f"Filtrowanie nadchodzących premier w zakresie od {upcoming_start} do {upcoming_end}")
 
 # 3. Ogólne Nadchodzące Premiery - Filmy
 list_upcoming_movies = f"Nadchodzące Premiery - Filmy ({CURRENT_YEAR})"
 params_up_movies = {
-    "primary_release_date.gte": today,
-    "primary_release_date.lte": end_of_year,
-    "sort_by": "popularity.asc"
+    "primary_release_date.gte": upcoming_start,
+    "primary_release_date.lte": upcoming_end,
+    "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
 }
-items_up_movies = discover_media("movie", params_up_movies)
+items_up_movies = discover_media("movie", params_up_movies, max_pages=5)
 update_tmdb_list(list_upcoming_movies, items_up_movies, clear=True)
 time.sleep(0.5)
 
 # 4. Ogólne Nadchodzące Premiery - Seriale
 list_upcoming_series = f"Nadchodzące Premiery - Seriale ({CURRENT_YEAR})"
 params_up_series = {
-    "first_air_date.gte": today,
-    "first_air_date.lte": end_of_year,
-    "sort_by": "popularity.asc"
+    "first_air_date.gte": upcoming_start,
+    "first_air_date.lte": upcoming_end,
+    "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
 }
-items_up_series = discover_media("tv", params_up_series)
+items_up_series = discover_media("tv", params_up_series, max_pages=5)
 update_tmdb_list(list_upcoming_series, items_up_series, clear=True)
 time.sleep(0.5)
 
