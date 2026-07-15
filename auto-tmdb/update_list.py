@@ -170,14 +170,40 @@ def update_tmdb_list(list_name, items, clear=False):
         # Krótka pauza, aby nie przeciążyć API przy dużych aktualizacjach
         time.sleep(0.2)
 
-def discover_media(media_type, params):
-    """Pobiera listę mediów z endpointu discover i zwraca gotowy format do zapisu."""
+def discover_media(media_type, params, max_pages=1):
+    """
+    Pobiera listę mediów z endpointu discover.
+    Może pobrać więcej niż jedną stronę wyników (każda strona to max 20 pozycji).
+    """
     url = f"https://api.themoviedb.org/3/discover/{media_type}"
-    response = requests.get(url, headers=headers, params=params)
-    if response.status_code != 200:
-        return []
-    results = response.json().get("results", [])
-    return [{"media_type": media_type, "media_id": item["id"]} for item in results]
+    all_results = []
+    
+    # Tworzymy kopię parametrów, aby nie modyfikować oryginału
+    query_params = params.copy()
+    
+    for page in range(1, max_pages + 1):
+        query_params["page"] = page
+        response = requests.get(url, headers=headers, params=query_params)
+        
+        if response.status_code != 200:
+            print(f"Błąd discover dla {media_type} na stronie {page}: {response.text}")
+            break
+            
+        data = response.json()
+        results = data.get("results", [])
+        if not results:
+            break
+            
+        all_results.extend(results)
+        
+        # Jeśli pobraliśmy już wszystkie dostępne strony na TMDB, przerywamy pętlę
+        if page >= data.get("total_pages", 1):
+            break
+            
+        # Mała pauza między stronami
+        time.sleep(0.1)
+        
+    return [{"media_type": media_type, "media_id": item["id"]} for item in all_results]
 
 # ==========================================
 # URUCHOMIENIE PROCESU AKTUALIZACJI
