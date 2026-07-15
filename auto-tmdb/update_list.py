@@ -258,6 +258,10 @@ def get_date_range(mode="recent"):
 print("\nPobieranie aktualnych list z konta...")
 fetch_user_lists()
 
+# Generowanie ciągów ID do wykluczenia (wyciąga wartości ze słowników i łączy przecinkami)
+exclude_genres_str = ",".join(str(val) for val in EXCLUDE_GENRES.values())
+exclude_keywords_str = ",".join(str(val) for val in EXCLUDE_KEYWORDS.values())
+
 # ------------------------------------------
 # 2.1 GATUNEK + PLATFORMA + OBECNY ROK
 # ------------------------------------------
@@ -281,6 +285,7 @@ for prov_name, prov_id in PROVIDERS.items():
                 "primary_release_date.lte": end_date,
                 "with_watch_providers": prov_id,
                 "watch_region": REGION,
+                "without_keywords": exclude_keywords_str,
                 "sort_by": "release_date.desc"
             }
             if is_keyword:
@@ -301,6 +306,8 @@ for prov_name, prov_id in PROVIDERS.items():
                 "first_air_date.lte": end_date,
                 "with_watch_providers": prov_id,
                 "watch_region": REGION,
+                "without_genres": exclude_genres_str,
+                "without_keywords": exclude_keywords_str,
                 "sort_by": "first_air_date.desc"
             }
             if is_keyword:
@@ -354,6 +361,7 @@ list_name_movies = f"Nowości - Filmy ({CURRENT_YEAR})"
 params_movies = {
     "primary_release_year": CURRENT_YEAR,
     "vote_count.gte": 50,
+    "without_keywords": exclude_keywords_str,
     "sort_by": "release_date.desc"
 }
 items_movies = discover_media("movie", params_movies)
@@ -365,6 +373,8 @@ list_name_series = f"Nowości - Seriale ({CURRENT_YEAR})"
 params_series = {
     "first_air_date_year": CURRENT_YEAR, 
     "vote_count.gte": 20,
+    "without_genres": exclude_genres_str,
+    "without_keywords": exclude_keywords_str,
     "sort_by": "first_air_date.desc"
 }
 items_series = discover_media("tv", params_series)
@@ -386,6 +396,7 @@ list_upcoming_movies = f"Nadchodzące Premiery - Filmy ({CURRENT_YEAR})"
 params_up_movies = {
     "primary_release_date.gte": upcoming_start,
     "primary_release_date.lte": upcoming_end,
+    "without_keywords": exclude_keywords_str,
     "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
 }
 items_up_movies = discover_media("movie", params_up_movies, max_pages=5)
@@ -397,6 +408,8 @@ list_upcoming_series = f"Nadchodzące Premiery - Seriale ({CURRENT_YEAR})"
 params_up_series = {
     "first_air_date.gte": upcoming_start,
     "first_air_date.lte": upcoming_end,
+    "without_genres": exclude_genres_str,
+    "without_keywords": exclude_keywords_str,
     "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
 }
 items_up_series = discover_media("tv", params_up_series, max_pages=5)
