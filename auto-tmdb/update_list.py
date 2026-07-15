@@ -12,7 +12,8 @@ from config import (
     PROVIDERS,
     DECADES,
     EXCLUDE_GENRES,
-    EXCLUDE_KEYWORDS
+    EXCLUDE_KEYWORDS,
+    LANGUAGES
 )
 
 # ==========================================
@@ -417,5 +418,40 @@ params_up_series = {
 items_up_series = discover_media("tv", params_up_series, max_pages=5)
 update_tmdb_list(list_upcoming_series, items_up_series, clear=True)
 time.sleep(0.5)
+
+# ==========================================
+# 2.9 i 3.0 PREMIERY WEDŁUG KRAJU / JĘZYKA (OBECNY ROK)
+# ==========================================
+print("\n--- Generowanie list: Filmy i Seriale z Różnych Krajów (2026) ---")
+
+for lang_name, lang_code in LANGUAGES.items():
+    print(f"\nGenerowanie list dla języka: {lang_name} ({lang_code})...")
+
+    # 1. Filmy (np. "Polskie - Filmy (2026)")
+    list_lang_movies = f"{lang_name} - Filmy ({CURRENT_YEAR})"
+    params_lang_movies = {
+        "with_original_language": lang_code, # <-- np. "pl", "it", "es"
+        "with_origin_country": lang_code.upper(), # <-- np. "PL", "IT", "ES"
+        "without_keywords": exclude_keywords_str,
+        "vote_count.gte": 5,                     # Obniżony próg dla filmów lokalnych
+        "sort_by": "popularity.desc"
+    }
+    items_lang_movies = discover_media("movie", params_lang_movies)
+    update_tmdb_list(list_lang_movies, items_lang_movies)
+    time.sleep(0.5)
+
+    # 2. Seriale (np. "Polskie - Seriale (2026)")
+    list_lang_series = f"{lang_name} - Seriale ({CURRENT_YEAR})"
+    params_lang_series = {
+        "with_original_language": lang_code, # <-- np. "pl", "it", "es"
+        "with_origin_country": lang_code.upper(), # <-- np. "PL", "IT", "ES"
+        "without_genres": exclude_genres_str,
+        "without_keywords": exclude_keywords_str,
+        "vote_count.gte": 5,                     # Obniżony próg dla seriali lokalnych
+        "sort_by": "popularity.desc"
+    }
+    items_lang_series = discover_media("tv", params_lang_series)
+    update_tmdb_list(list_lang_series, items_lang_series)
+    time.sleep(0.5)
 
 print("\n--- CAŁY PROCES ZAKOŃCZONY POMYŚLNIE! ---")
