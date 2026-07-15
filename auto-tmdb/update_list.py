@@ -423,7 +423,10 @@ time.sleep(0.5)
     # 2.9 i 3.0 PREMIERY WEDŁUG KRAJU / JĘZYKA (OBECNY ROK)
     # ==========================================
 print("\n--- Generowanie list: Filmy i Seriale z Różnych Krajów (2026) ---")
-    
+
+# Pobieramy dzisiejszą datę, aby odciąć błędne daty z przyszłości i zapowiedzi
+today_str = datetime.date.today().isoformat()
+
 for lang_name, lang_code in LANGUAGES.items():
     print(f"\nGenerowanie list dla języka: {lang_name} ({lang_code})...")
 
@@ -441,8 +444,9 @@ for lang_name, lang_code in LANGUAGES.items():
     # 1. Filmy (np. "Polskie - Filmy (2026)")
     list_lang_movies = f"{lang_name} - Filmy ({CURRENT_YEAR})"
     params_lang_movies = {
+        "primary_release_date.lte": today_str, # <-- Kluczowe: tylko filmy, które już miały premierę
         "with_original_language": lang_code, # <-- np. "pl", "it", "es"
-        "with_origin_country": lang_code.upper(), # <-- np. "PL", "IT", "ES"
+        "with_origin_country": country_code, # <-- np. "PL", "IT", "ES"
         "without_keywords": exclude_keywords_str,
         "vote_count.gte": 5,                     # Obniżony próg dla filmów lokalnych
         "sort_by": "release_date.desc"
@@ -454,8 +458,9 @@ for lang_name, lang_code in LANGUAGES.items():
     # 2. Seriale (np. "Polskie - Seriale (2026)")
     list_lang_series = f"{lang_name} - Seriale ({CURRENT_YEAR})"
     params_lang_series = {
+        "first_air_date.lte": today_str,       # <-- Kluczowe dla seriali
         "with_original_language": lang_code, # <-- np. "pl", "it", "es"
-        "with_origin_country": lang_code.upper(), # <-- np. "PL", "IT", "ES"
+        "with_origin_country": country_code, # <-- np. "PL", "IT", "ES"
         "without_genres": exclude_genres_str,
         "without_keywords": exclude_keywords_str,
         "vote_count.gte": 5,                     # Obniżony próg dla seriali lokalnych
