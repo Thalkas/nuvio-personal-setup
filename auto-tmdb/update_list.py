@@ -251,12 +251,12 @@ def get_date_range(mode="recent"):
 # URUCHOMIENIE PROCESU AKTUALIZACJI
 # ==========================================
 # 1. NAJPIERW USUŃ STARE LISTY (wywołanie funkcji, która wcześniej była tylko zdefiniowana)
-#print("Rozpoczynam czyszczenie konta...")
-#delete_all_my_lists()
+print("Rozpoczynam czyszczenie konta...")
+delete_all_my_lists()
 
 # 2. DOPIERO TERAZ POBIERZ AKTUALNY STAN (który powinien być już pusty lub zawierać tylko listy spoza skryptu)
-print("\nPobieranie aktualnych list z konta...")
-fetch_user_lists()
+#print("\nPobieranie aktualnych list z konta...")
+#fetch_user_lists()
 
 # Generowanie ciągów ID do wykluczenia (wyciąga wartości ze słowników i łączy przecinkami)
 exclude_genres_str = ",".join(str(val) for val in EXCLUDE_GENRES.values())
