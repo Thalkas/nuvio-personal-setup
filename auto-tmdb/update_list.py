@@ -173,7 +173,7 @@ def update_tmdb_list(list_name, items, clear=False):
         # Krótka pauza, aby nie przeciążyć API przy dużych aktualizacjach
         time.sleep(0.2)
 
-def discover_media(media_type, params, max_pages=10):
+def discover_media(media_type, params, max_pages=20):
     """
     Pobiera listę mediów z endpointu discover.
     Może pobrać więcej niż jedną stronę wyników (każda strona to max 20 pozycji).
@@ -250,208 +250,208 @@ def get_date_range(mode="recent"):
         
     return start_date.isoformat(), end_date.isoformat()
 
-# ==========================================
-# URUCHOMIENIE PROCESU AKTUALIZACJI
-# ==========================================
-# 1. NAJPIERW USUŃ STARE LISTY (wywołanie funkcji, która wcześniej była tylko zdefiniowana)
-#print("Rozpoczynam czyszczenie konta...")
-#delete_all_my_lists()
-
-# 2. DOPIERO TERAZ POBIERZ AKTUALNY STAN (który powinien być już pusty lub zawierać tylko listy spoza skryptu)
-print("\nPobieranie aktualnych list z konta...")
-fetch_user_lists()
-
-# Generowanie ciągów ID do wykluczenia (wyciąga wartości ze słowników i łączy przecinkami)
-exclude_genres_str = ",".join(str(val) for val in EXCLUDE_GENRES.values())
-exclude_keywords_str = ",".join(str(val) for val in EXCLUDE_KEYWORDS.values())
-
-# ------------------------------------------
-# 2.1 GATUNEK + PLATFORMA + OBECNY ROK
-# ------------------------------------------
-print("\n--- Generowanie list: Gatunek + Platforma + Rok 2026 (Dynamiczne Daty) ---")
-
-# Pobieramy dynamiczne daty dla nowości (poprzedni miesiąc + obecny)
-start_date, end_date = get_date_range(mode="recent")
-print(f"Filtrowanie premier w zakresie od {start_date} do {end_date}")
-
-for prov_name, prov_id in PROVIDERS.items():
-    # Odkomentuj jeśli chcesz testować tylko na SkyShowTime:
-    # if prov_name != "SkyShowTime":
-    #     continue
-
-    # 1. Filmy dla standardowych gatunków i dodatkowych
-    for g_dict, is_keyword in [(GENRES_MOVIES, False), (ADDITIONAL_GENRES_MOVIES, True)]:
-        for g_name, g_val in g_dict.items():
-            list_name = f"{prov_name}: {g_name} ({CURRENT_YEAR})"
-            params = {
-                "primary_release_date.gte": start_date,
-                "primary_release_date.lte": end_date,
-                "with_watch_providers": prov_id,
-                "watch_region": REGION,
-                "without_keywords": exclude_keywords_str,
-                "sort_by": "release_date.desc"
-            }
-            if is_keyword:
-                params["with_keywords"] = g_val
-            else:
-                params["with_genres"] = g_val
-            
-            items = discover_media("movie", params)
-            update_tmdb_list(list_name, items)
-            time.sleep(0.3)
-
-    # 2. Seriale dla standardowych gatunków i dodatkowych
-    for g_dict, is_keyword in [(GENRES_SERIES, False), (ADDITIONAL_GENRES_SERIES, True)]:
-        for g_name, g_val in g_dict.items():
-            list_name = f"{prov_name} (Seriale): {g_name} ({CURRENT_YEAR})"
-            params = {
-                "first_air_date.gte": start_date,
-                "first_air_date.lte": end_date,
-                "with_watch_providers": prov_id,
-                "watch_region": REGION,
-                "without_genres": exclude_genres_str,
-                "without_keywords": exclude_keywords_str,
-                "sort_by": "first_air_date.desc"
-            }
-            if is_keyword:
-                params["with_keywords"] = g_val
-            else:
-                params["with_genres"] = g_val
-            
-            items = discover_media("tv", params)
-            update_tmdb_list(list_name, items)
-            time.sleep(0.3)
-
-# ------------------------------------------
-# 2.2 GATUNKI OGÓLNE (PO POPULARNOŚCI)
-# ------------------------------------------
-#print("\n--- Generowanie list: Gatunki Ogólne (2026) ---")
-#for g_name, g_id in GENRES_MOVIES.items():
-#    list_name = f"{g_name} ({CURRENT_YEAR})"
-#    params = {
-#        "primary_release_year": CURRENT_YEAR,
-#        "with_genres": g_id,
-#        "sort_by": "popularity.desc"
-#    }
-#    items = discover_media("movie", params)
-#    update_tmdb_list(list_name, items)
-#    time.sleep(0.3)
-
-# ------------------------------------------
-# 2.3 DEKADY
-# ------------------------------------------
-#print("\n--- Generowanie list: Dekady (Filmy) ---")
-#for dec_name, (start_date, end_date) in DECADES.items():
-#    for g_name, g_id in GENRES_MOVIES.items():
-#        list_name = f"{dec_name}: {g_name}"
-#        params = {
-#            "primary_release_date.gte": start_date,
-#            "primary_release_date.lte": end_date,
-#            "with_genres": g_id,
-#            "sort_by": "popularity.desc"
-#        }
-#        items = discover_media("movie", params)
-#        update_tmdb_list(list_name, items)
-#        time.sleep(0.5)
-
-# ==========================================
-# 2.5 i 2.6 NOWOŚCI (FILMY & SERIALE) - OGÓLNE
-# ==========================================
-print("\n--- Generowanie list: Ogólne Nowości Filmy i Seriale ---")
-
-# 1. Ogólne Nowości Filmy
-list_name_movies = f"Nowości - Filmy ({CURRENT_YEAR})"
-params_movies = {
-    "primary_release_year": CURRENT_YEAR,
-    "vote_count.gte": 50,
-    "without_keywords": exclude_keywords_str,
-    "sort_by": "release_date.desc"
-}
-items_movies = discover_media("movie", params_movies)
-update_tmdb_list(list_name_movies, items_movies)
-time.sleep(0.5)
-
-# 2. Ogólne Nowości Seriale
-list_name_series = f"Nowości - Seriale ({CURRENT_YEAR})"
-params_series = {
-    "first_air_date_year": CURRENT_YEAR, 
-    "vote_count.gte": 20,
-    "without_genres": exclude_genres_str,
-    "without_keywords": exclude_keywords_str,
-    "sort_by": "first_air_date.desc"
-}
-items_series = discover_media("tv", params_series)
-update_tmdb_list(list_name_series, items_series)
-time.sleep(0.5)
-
-
-# ==========================================
-# 2.7 i 2.8 NADCHODZĄCE PREMIERY - OGÓLNE (DYNAMICZNE OKNO +3 MIESIĄCE)
-# ==========================================
-print("\n--- Generowanie list: Ogólne Nadchodzące Premiery (Dynamiczne Daty) ---")
-
-# Pobieramy zakres: od jutra do +90 dni
-upcoming_start, upcoming_end = get_date_range(mode="upcoming")
-print(f"Filtrowanie nadchodzących premier w zakresie od {upcoming_start} do {upcoming_end}")
-
-# 3. Ogólne Nadchodzące Premiery - Filmy
-list_upcoming_movies = f"Nadchodzące Premiery - Filmy ({CURRENT_YEAR})"
-params_up_movies = {
-    "primary_release_date.gte": upcoming_start,
-    "primary_release_date.lte": upcoming_end,
-    "without_keywords": exclude_keywords_str,
-    "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
-}
-items_up_movies = discover_media("movie", params_up_movies)
-update_tmdb_list(list_upcoming_movies, items_up_movies, clear=True)
-time.sleep(0.5)
-
-# 4. Ogólne Nadchodzące Premiery - Seriale
-list_upcoming_series = f"Nadchodzące Premiery - Seriale ({CURRENT_YEAR})"
-params_up_series = {
-    "first_air_date.gte": upcoming_start,
-    "first_air_date.lte": upcoming_end,
-    "without_genres": exclude_genres_str,
-    "without_keywords": exclude_keywords_str,
-    "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
-}
-items_up_series = discover_media("tv", params_up_series)
-update_tmdb_list(list_upcoming_series, items_up_series, clear=True)
-time.sleep(0.5)
-
-# ==========================================
-# 2.9 i 3.0 PREMIERY WEDŁUG KRAJU / JĘZYKA (OBECNY ROK)
-# ==========================================
-print("\n--- Generowanie list: Filmy i Seriale z Różnych Krajów (2026) ---")
-
-for lang_name, lang_code in LANGUAGES.items():
-    print(f"\nGenerowanie list dla języka: {lang_name} ({lang_code})...")
-
-    # 1. Filmy (np. "Polskie - Filmy (2026)")
-    list_lang_movies = f"{lang_name} - Filmy ({CURRENT_YEAR})"
-    params_lang_movies = {
-        "with_original_language": lang_code, # <-- np. "pl", "it", "es"
-        "with_origin_country": lang_code.upper(), # <-- np. "PL", "IT", "ES"
+    # ==========================================
+    # URUCHOMIENIE PROCESU AKTUALIZACJI
+    # ==========================================
+    # 1. NAJPIERW USUŃ STARE LISTY (wywołanie funkcji, która wcześniej była tylko zdefiniowana)
+    #print("Rozpoczynam czyszczenie konta...")
+    #delete_all_my_lists()
+    
+    # 2. DOPIERO TERAZ POBIERZ AKTUALNY STAN (który powinien być już pusty lub zawierać tylko listy spoza skryptu)
+    print("\nPobieranie aktualnych list z konta...")
+    fetch_user_lists()
+    
+    # Generowanie ciągów ID do wykluczenia (wyciąga wartości ze słowników i łączy przecinkami)
+    exclude_genres_str = ",".join(str(val) for val in EXCLUDE_GENRES.values())
+    exclude_keywords_str = ",".join(str(val) for val in EXCLUDE_KEYWORDS.values())
+    
+    # ------------------------------------------
+    # 2.1 GATUNEK + PLATFORMA + OBECNY ROK
+    # ------------------------------------------
+    print("\n--- Generowanie list: Gatunek + Platforma + Rok 2026 (Dynamiczne Daty) ---")
+    
+    # Pobieramy dynamiczne daty dla nowości (poprzedni miesiąc + obecny)
+    start_date, end_date = get_date_range(mode="recent")
+    print(f"Filtrowanie premier w zakresie od {start_date} do {end_date}")
+    
+    for prov_name, prov_id in PROVIDERS.items():
+        # Odkomentuj jeśli chcesz testować tylko na SkyShowTime:
+        # if prov_name != "SkyShowTime":
+        #     continue
+    
+        # 1. Filmy dla standardowych gatunków i dodatkowych
+        for g_dict, is_keyword in [(GENRES_MOVIES, False), (ADDITIONAL_GENRES_MOVIES, True)]:
+            for g_name, g_val in g_dict.items():
+                list_name = f"{prov_name}: {g_name} ({CURRENT_YEAR})"
+                params = {
+                    "primary_release_date.gte": start_date,
+                    "primary_release_date.lte": end_date,
+                    "with_watch_providers": prov_id,
+                    "watch_region": REGION,
+                    "without_keywords": exclude_keywords_str,
+                    "sort_by": "release_date.desc"
+                }
+                if is_keyword:
+                    params["with_keywords"] = g_val
+                else:
+                    params["with_genres"] = g_val
+                
+                items = discover_media("movie", params)
+                update_tmdb_list(list_name, items)
+                time.sleep(0.3)
+    
+        # 2. Seriale dla standardowych gatunków i dodatkowych
+        for g_dict, is_keyword in [(GENRES_SERIES, False), (ADDITIONAL_GENRES_SERIES, True)]:
+            for g_name, g_val in g_dict.items():
+                list_name = f"{prov_name} (Seriale): {g_name} ({CURRENT_YEAR})"
+                params = {
+                    "first_air_date.gte": start_date,
+                    "first_air_date.lte": end_date,
+                    "with_watch_providers": prov_id,
+                    "watch_region": REGION,
+                    "without_genres": exclude_genres_str,
+                    "without_keywords": exclude_keywords_str,
+                    "sort_by": "first_air_date.desc"
+                }
+                if is_keyword:
+                    params["with_keywords"] = g_val
+                else:
+                    params["with_genres"] = g_val
+                
+                items = discover_media("tv", params)
+                update_tmdb_list(list_name, items)
+                time.sleep(0.3)
+    
+    # ------------------------------------------
+    # 2.2 GATUNKI OGÓLNE (PO POPULARNOŚCI)
+    # ------------------------------------------
+    #print("\n--- Generowanie list: Gatunki Ogólne (2026) ---")
+    #for g_name, g_id in GENRES_MOVIES.items():
+    #    list_name = f"{g_name} ({CURRENT_YEAR})"
+    #    params = {
+    #        "primary_release_year": CURRENT_YEAR,
+    #        "with_genres": g_id,
+    #        "sort_by": "popularity.desc"
+    #    }
+    #    items = discover_media("movie", params)
+    #    update_tmdb_list(list_name, items)
+    #    time.sleep(0.3)
+    
+    # ------------------------------------------
+    # 2.3 DEKADY
+    # ------------------------------------------
+    #print("\n--- Generowanie list: Dekady (Filmy) ---")
+    #for dec_name, (start_date, end_date) in DECADES.items():
+    #    for g_name, g_id in GENRES_MOVIES.items():
+    #        list_name = f"{dec_name}: {g_name}"
+    #        params = {
+    #            "primary_release_date.gte": start_date,
+    #            "primary_release_date.lte": end_date,
+    #            "with_genres": g_id,
+    #            "sort_by": "popularity.desc"
+    #        }
+    #        items = discover_media("movie", params)
+    #        update_tmdb_list(list_name, items)
+    #        time.sleep(0.5)
+    
+    # ==========================================
+    # 2.5 i 2.6 NOWOŚCI (FILMY & SERIALE) - OGÓLNE
+    # ==========================================
+    print("\n--- Generowanie list: Ogólne Nowości Filmy i Seriale ---")
+    
+    # 1. Ogólne Nowości Filmy
+    list_name_movies = f"Nowości - Filmy ({CURRENT_YEAR})"
+    params_movies = {
+        "primary_release_year": CURRENT_YEAR,
+        "vote_count.gte": 50,
         "without_keywords": exclude_keywords_str,
-        "vote_count.gte": 5,                     # Obniżony próg dla filmów lokalnych
-        "sort_by": "popularity.desc"
+        "sort_by": "release_date.desc"
     }
-    items_lang_movies = discover_media("movie", params_lang_movies)
-    update_tmdb_list(list_lang_movies, items_lang_movies)
+    items_movies = discover_media("movie", params_movies)
+    update_tmdb_list(list_name_movies, items_movies)
     time.sleep(0.5)
-
-    # 2. Seriale (np. "Polskie - Seriale (2026)")
-    list_lang_series = f"{lang_name} - Seriale ({CURRENT_YEAR})"
-    params_lang_series = {
-        "with_original_language": lang_code, # <-- np. "pl", "it", "es"
-        "with_origin_country": lang_code.upper(), # <-- np. "PL", "IT", "ES"
+    
+    # 2. Ogólne Nowości Seriale
+    list_name_series = f"Nowości - Seriale ({CURRENT_YEAR})"
+    params_series = {
+        "first_air_date_year": CURRENT_YEAR, 
+        "vote_count.gte": 20,
         "without_genres": exclude_genres_str,
         "without_keywords": exclude_keywords_str,
-        "vote_count.gte": 5,                     # Obniżony próg dla seriali lokalnych
-        "sort_by": "popularity.desc"
+        "sort_by": "first_air_date.desc"
     }
-    items_lang_series = discover_media("tv", params_lang_series)
-    update_tmdb_list(list_lang_series, items_lang_series)
+    items_series = discover_media("tv", params_series)
+    update_tmdb_list(list_name_series, items_series)
     time.sleep(0.5)
-
-print("\n--- CAŁY PROCES ZAKOŃCZONY POMYŚLNIE! ---")
+    
+    
+    # ==========================================
+    # 2.7 i 2.8 NADCHODZĄCE PREMIERY - OGÓLNE (DYNAMICZNE OKNO +3 MIESIĄCE)
+    # ==========================================
+    print("\n--- Generowanie list: Ogólne Nadchodzące Premiery (Dynamiczne Daty) ---")
+    
+    # Pobieramy zakres: od jutra do +90 dni
+    upcoming_start, upcoming_end = get_date_range(mode="upcoming")
+    print(f"Filtrowanie nadchodzących premier w zakresie od {upcoming_start} do {upcoming_end}")
+    
+    # 3. Ogólne Nadchodzące Premiery - Filmy
+    list_upcoming_movies = f"Nadchodzące Premiery - Filmy ({CURRENT_YEAR})"
+    params_up_movies = {
+        "primary_release_date.gte": upcoming_start,
+        "primary_release_date.lte": upcoming_end,
+        "without_keywords": exclude_keywords_str,
+        "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
+    }
+    items_up_movies = discover_media("movie", params_up_movies)
+    update_tmdb_list(list_upcoming_movies, items_up_movies, clear=True)
+    time.sleep(0.5)
+    
+    # 4. Ogólne Nadchodzące Premiery - Seriale
+    list_upcoming_series = f"Nadchodzące Premiery - Seriale ({CURRENT_YEAR})"
+    params_up_series = {
+        "first_air_date.gte": upcoming_start,
+        "first_air_date.lte": upcoming_end,
+        "without_genres": exclude_genres_str,
+        "without_keywords": exclude_keywords_str,
+        "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
+    }
+    items_up_series = discover_media("tv", params_up_series)
+    update_tmdb_list(list_upcoming_series, items_up_series, clear=True)
+    time.sleep(0.5)
+    
+    # ==========================================
+    # 2.9 i 3.0 PREMIERY WEDŁUG KRAJU / JĘZYKA (OBECNY ROK)
+    # ==========================================
+    print("\n--- Generowanie list: Filmy i Seriale z Różnych Krajów (2026) ---")
+    
+    for lang_name, lang_code in LANGUAGES.items():
+        print(f"\nGenerowanie list dla języka: {lang_name} ({lang_code})...")
+    
+        # 1. Filmy (np. "Polskie - Filmy (2026)")
+        list_lang_movies = f"{lang_name} - Filmy ({CURRENT_YEAR})"
+        params_lang_movies = {
+            "with_original_language": lang_code, # <-- np. "pl", "it", "es"
+            "with_origin_country": lang_code.upper(), # <-- np. "PL", "IT", "ES"
+            "without_keywords": exclude_keywords_str,
+            "vote_count.gte": 5,                     # Obniżony próg dla filmów lokalnych
+            "sort_by": "release_date.desc"
+        }
+        items_lang_movies = discover_media("movie", params_lang_movies)
+        update_tmdb_list(list_lang_movies, items_lang_movies)
+        time.sleep(0.5)
+    
+        # 2. Seriale (np. "Polskie - Seriale (2026)")
+        list_lang_series = f"{lang_name} - Seriale ({CURRENT_YEAR})"
+        params_lang_series = {
+            "with_original_language": lang_code, # <-- np. "pl", "it", "es"
+            "with_origin_country": lang_code.upper(), # <-- np. "PL", "IT", "ES"
+            "without_genres": exclude_genres_str,
+            "without_keywords": exclude_keywords_str,
+            "vote_count.gte": 5,                     # Obniżony próg dla seriali lokalnych
+            "sort_by": "first_air_date.desc"
+        }
+        items_lang_series = discover_media("tv", params_lang_series)
+        update_tmdb_list(list_lang_series, items_lang_series)
+        time.sleep(0.5)
+    
+    print("\n--- CAŁY PROCES ZAKOŃCZONY POMYŚLNIE! ---")
