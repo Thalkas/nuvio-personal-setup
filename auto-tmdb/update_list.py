@@ -133,15 +133,14 @@ def get_or_create_list(list_name):
         return None
 
 def update_tmdb_list(list_name, items, clear=False):
-    """Czyści listę i dodaje do niej nowe pozycje."""
+    """Aktualizuje listę, opcjonalnie czyszcząc ją i dodając WSZYSTKIE przekazane pozycje w paczkach po 20."""
     list_id = get_or_create_list(list_name)
     if not list_id:
         return
 
-    # Krok 1: Wyczyszczenie listy (tylko jeśli parametr clear jest ustawiony na True)
+    # 1. Czyszczenie listy (API v3)
     if clear:
         print(f"Czyszczenie listy '{list_name}' przed dodaniem nowych pozycji...")
-        # W API v3 czyszczenie wykonuje się metodą POST na endpoint /list/{list_id}/clear z parametrem confirm=true
         clear_url = f"https://api.themoviedb.org/3/list/{list_id}/clear"
         res_clear = requests.post(clear_url, headers=headers, params={"confirm": "true"})
         if res_clear.status_code not in [200, 201]:
@@ -151,14 +150,25 @@ def update_tmdb_list(list_name, items, clear=False):
         print(f"Brak nowych filmów/seriali dla '{list_name}'.")
         return
 
-    # Krok 2: Dodanie nowych elementów (maksymalnie 20 - ograniczenie TMDB na jeden request)
+    # 2. Dzielenie listy na paczki po maksymalnie 20 elementów (limit API v4)
+    chunk_size = 20
+    chunks = [items[i:i + chunk_size] for i in range(0, len(items), chunk_size)]
+    
+    print(f"Dodawanie {len(items)} pozycji do '{list_name}' (podział na {len(chunks)} paczek)...")
+    
     add_url = f"https://api.themoviedb.org/4/list/{list_id}/items"
-    payload = {"items": items[:20]} # bierzemy top 50 wyników
-    res = requests.post(add_url, headers=headers, json=payload)
-    if res.status_code == 200:
-        print(f"Zaktualizowano listę '{list_name}' - dodano {len(payload['items'])} pozycji.")
-    else:
-        print(f"Błąd podczas dodawania elementów do '{list_name}': {res.text}")
+    
+    for idx, chunk in enumerate(chunks, start=1):
+        payload = {"items": chunk}
+        res = requests.post(add_url, headers=headers, json=payload)
+        
+        if res.status_code == 200:
+            print(f"  -> Paczka {idx}/{len(chunks)} dodana pomyślnie ({len(chunk)} szt.).")
+        else:
+            print(f"  -> Błąd przy paczce {idx}/{len(chunks)}: {res.text}")
+            
+        # Krótka pauza, aby nie przeciążyć API przy dużych aktualizacjach
+        time.sleep(0.2)
 
 def discover_media(media_type, params):
     """Pobiera listę mediów z endpointu discover i zwraca gotowy format do zapisu."""
