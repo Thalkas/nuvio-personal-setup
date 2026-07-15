@@ -141,10 +141,10 @@ def update_tmdb_list(list_name, items, clear=False):
     # Krok 1: Wyczyszczenie listy (tylko jeśli parametr clear jest ustawiony na True)
     if clear:
         print(f"Czyszczenie listy '{list_name}' przed dodaniem nowych pozycji...")
-        clear_url = f"https://api.themoviedb.org/4/list/{list_id}/clear"
-        # API v4 wymaga metody POST do czyszczenia listy
-        res_clear = requests.post(clear_url, headers=headers)
-        if res_clear.status_code != 200:
+        # W API v3 czyszczenie wykonuje się metodą POST na endpoint /list/{list_id}/clear z parametrem confirm=true
+        clear_url = f"https://api.themoviedb.org/3/list/{list_id}/clear"
+        res_clear = requests.post(clear_url, headers=headers, params={"confirm": "true"})
+        if res_clear.status_code not in [200, 201]:
             print(f"Problem z czyszczeniem listy '{list_name}': {res_clear.text}")
 
     if not items:
