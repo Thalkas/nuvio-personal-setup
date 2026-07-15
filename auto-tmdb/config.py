@@ -85,17 +85,26 @@ DECADES = {
 }
 
 LANGUAGES = {
-    "Polski": "pl"
-    #"Francuski": "fr",
-    #"Hiszpański": "es",
-    #"Japoński": "ja"
-    #"Niemiecki": "de",
-    #"Portugalski": "pt",
-    #"Chiński": "zh",
-    #"Włoski": "it",
-    #"Rosyjski": "ru",
-    #"Koreańskie": "ko",
-    #"Czeskie": "cs",
-    #"Arabski": "ar",
-    #"Holenderski": "nl"
+    # --- EUROPA ---
+    "Polskie": "pl",
+    "Włoskie": "it",
+    "Hiszpańskie": "es",
+    "Francuskie": "fr",
+    "Niemieckie": "de",
+    "Czeskie": "cs",
+    "Brytyjskie": "en",       # Uwaga: TMDB używa języka angielskiego ('en') dla UK, ale kraj 'GB' w params załatwi sprawę!
+    # SKANDYNAWSKIE
+    "Norweskie": "no",    # Można też użyć 'sv' (Szwecja) lub 'da' (Dania) - 'no' i kraj 'NO' da świetne norweskie kryminały
+    "Szweckie": "sv",
+    "Duńskie": "da",
+    
+    # --- AZJA ---
+    "Koreańskie": "ko",       # Ogromny hit ostatnich lat (K-Dramas, thrillery)
+    "Japońskie": "ja",        # Klasyczne kino japońskie oraz Anime
+    "Chińskie": "zh",         # W tym produkcje z Hongkongu i Tajwanu
+    "Indyjskie": "hi",        # Bollywood i inne regiony Indii
+    
+    # --- AMERYKA ŁACIŃSKA ---
+    "Brazylijskie": "pt",     # Język portugalski, kraj BR
+    "Meksykańskie": "es"      # Język hiszpański, kraj MX (np. świetne dramaty i kryminały)
 }
