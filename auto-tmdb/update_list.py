@@ -420,12 +420,12 @@ update_tmdb_list(list_upcoming_series, items_up_series, clear=True)
 time.sleep(0.5)
     
     # ==========================================
-    # 2.9 i 3.0 PREMIERY WEDŁUG KRAJU / JĘZYKA (OBECNY ROK)
+    # 2.9 i 3.0 PRODUKCJE Z KONKRETNYCH KRAJÓW / JĘZYKA
     # ==========================================
 print("\n--- Generowanie list: Filmy i Seriale z Różnych Krajów (2026) ---")
 
 # Pobieramy dzisiejszą datę, aby odciąć błędne daty z przyszłości i zapowiedzi
-today_str = datetime.date.today().isoformat()
+today_str = datetime.date.today().isoformat() 
 
 for lang_name, lang_code in LANGUAGES.items():
     print(f"\nGenerowanie list dla języka: {lang_name} ({lang_code})...")
@@ -442,32 +442,34 @@ for lang_name, lang_code in LANGUAGES.items():
         country_code = "BR"
         
     # 1. Filmy (np. "Polskie - Filmy (2026)")
-    list_lang_movies = f"{lang_name} - Filmy ({CURRENT_YEAR})"
+    list_lang_movies = f"{lang_name} - Filmy"
     params_lang_movies = {
-        "primary_release_date.lte": today_str, # <-- Kluczowe: tylko filmy, które już miały premierę
+        "primary_release_date.gte": "1950-01-01", # <-- Pobiera filmy wydane od 1950 roku
+        "primary_release_date.lte": today_str,    # <-- Do dzisiaj (odcina przyszłe i puste daty)
         "with_original_language": lang_code, # <-- np. "pl", "it", "es"
-        "with_origin_country": country_code, # <-- np. "PL", "IT", "ES"
+    #    "with_origin_country": country_code, # <-- np. "PL", "IT", "ES"
         "without_keywords": exclude_keywords_str,
-        "vote_count.gte": 5,                     # Obniżony próg dla filmów lokalnych
+    #    "vote_count.gte": 5,                     # Obniżony próg dla filmów lokalnych
         "sort_by": "release_date.desc"
     }
     items_lang_movies = discover_media("movie", params_lang_movies)
-    update_tmdb_list(list_lang_movies, items_lang_movies, clear=True)
+    update_tmdb_list(list_lang_movies, items_lang_movies)
     time.sleep(0.5)
     
     # 2. Seriale (np. "Polskie - Seriale (2026)")
-    list_lang_series = f"{lang_name} - Seriale ({CURRENT_YEAR})"
+    list_lang_series = f"{lang_name} - Seriale"
     params_lang_series = {
-        "first_air_date.lte": today_str,       # <-- Kluczowe dla seriali
+        "first_air_date.gte": "1950-01-01", # <-- Pobiera seriale od początku 1950 roku
+        "first_air_date.lte": today_str,    # <-- Do dzisiaj (zapobiega przyszłym/błędnym datom)
         "with_original_language": lang_code, # <-- np. "pl", "it", "es"
-        "with_origin_country": country_code, # <-- np. "PL", "IT", "ES"
+    #    "with_origin_country": country_code, # <-- np. "PL", "IT", "ES"
         "without_genres": exclude_genres_str,
         "without_keywords": exclude_keywords_str,
-        "vote_count.gte": 5,                     # Obniżony próg dla seriali lokalnych
+    #    "vote_count.gte": 5,                     # Obniżony próg dla seriali lokalnych
         "sort_by": "first_air_date.desc"
     }
     items_lang_series = discover_media("tv", params_lang_series)
-    update_tmdb_list(list_lang_series, items_lang_series, clear=True)
+    update_tmdb_list(list_lang_series, items_lang_series)
     time.sleep(0.5)
     
 print("\n--- CAŁY PROCES ZAKOŃCZONY POMYŚLNIE! ---")
