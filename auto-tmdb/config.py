@@ -89,7 +89,7 @@ LANGUAGES = {
     # SŁOWIAŃSKIE
         "Polskie": "pl",
         "Czeskie": "cs",
-        "Słowackie": "sk,
+        "Słowackie": "sk",
         "Chorwackie": "hr",
         "Węgierskie": "hu",
     # ROMAŃSKIE
