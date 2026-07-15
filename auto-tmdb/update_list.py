@@ -209,8 +209,8 @@ def discover_media(media_type, params, max_pages=5):
 # URUCHOMIENIE PROCESU AKTUALIZACJI
 # ==========================================
 # 1. NAJPIERW USUŃ STARE LISTY (wywołanie funkcji, która wcześniej była tylko zdefiniowana)
-#print("Rozpoczynam czyszczenie konta...")
-#delete_all_my_lists()
+print("Rozpoczynam czyszczenie konta...")
+delete_all_my_lists()
 
 # 2. DOPIERO TERAZ POBIERZ AKTUALNY STAN (który powinien być już pusty lub zawierać tylko listy spoza skryptu)
 print("\nPobieranie aktualnych list z konta...")
@@ -222,8 +222,8 @@ fetch_user_lists()
 print("\n--- Generowanie list: Gatunek + Platforma + Rok 2026 ---")
 for prov_name, prov_id in PROVIDERS.items():
     # WARUNEK: Jeśli nazwa dostawcy to NIE "SkyShowTime", pomiń go
-    if prov_name != "SkyShowTime":
-        continue
+    #if prov_name != "SkyShowTime":
+    #    continue
     # Filmy dla standardowych gatunków i dodatkowych
     for g_dict, is_keyword in [(GENRES_MOVIES, False), (ADDITIONAL_GENRES_MOVIES, True)]:
         for g_name, g_val in g_dict.items():
@@ -231,7 +231,6 @@ for prov_name, prov_id in PROVIDERS.items():
             params = {
                 "primary_release_year": CURRENT_YEAR,
                 "with_watch_providers": prov_id,
-                "watch_region": REGION,
                 "sort_by": "release_date.desc"
             }
             if is_keyword:
@@ -302,7 +301,8 @@ print("\n--- Generowanie list: Ogólne Nowości Filmy i Seriale ---")
 # 1. Ogólne Nowości Filmy
 list_name_movies = f"Nowości - Filmy ({CURRENT_YEAR})"
 params_movies = {
-    "primary_release_year": CURRENT_YEAR, 
+    "primary_release_year": CURRENT_YEAR,
+    "vote_count.gte": 20,
     "sort_by": "release_date.desc"
 }
 items_movies = discover_media("movie", params_movies)
@@ -313,6 +313,7 @@ time.sleep(0.5)
 list_name_series = f"Nowości - Seriale ({CURRENT_YEAR})"
 params_series = {
     "first_air_date_year": CURRENT_YEAR, 
+    "vote_count.gte": 20,
     "sort_by": "first_air_date.desc"
 }
 items_series = discover_media("tv", params_series)
@@ -332,7 +333,7 @@ list_upcoming_movies = f"Nadchodzące Premiery - Filmy ({CURRENT_YEAR})"
 params_up_movies = {
     "primary_release_date.gte": today,
     "primary_release_date.lte": end_of_year,
-    "sort_by": "release_date.asc"
+    "sort_by": "popularity.asc"
 }
 items_up_movies = discover_media("movie", params_up_movies)
 update_tmdb_list(list_upcoming_movies, items_up_movies, clear=True)
@@ -343,7 +344,7 @@ list_upcoming_series = f"Nadchodzące Premiery - Seriale ({CURRENT_YEAR})"
 params_up_series = {
     "first_air_date.gte": today,
     "first_air_date.lte": end_of_year,
-    "sort_by": "first_air_date.asc"
+    "sort_by": "popularity.asc"
 }
 items_up_series = discover_media("tv", params_up_series)
 update_tmdb_list(list_upcoming_series, items_up_series, clear=True)
