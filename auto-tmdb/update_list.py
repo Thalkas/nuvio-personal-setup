@@ -426,7 +426,16 @@ def get_date_range(mode="recent"):
     
     for lang_name, lang_code in LANGUAGES.items():
         print(f"\nGenerowanie list dla języka: {lang_name} ({lang_code})...")
-    
+
+        # Dynamiczne dopasowanie kodu kraju
+        country_code = lang_code.upper()
+        if lang_name == "Brytyjskie":
+            country_code = "GB"  # Dla języka 'en' wymuszamy Wielką Brytanię zamiast USA
+        elif lang_name == "Meksykańskie":
+            country_code = "MX"  # Dla języka 'es' wymuszamy Meksyk zamiast Hiszpanii
+        elif lang_name == "Brazylijskie":
+            country_code = "BR"  # Dla języka 'pt' wymuszamy Brazylię zamiast Portugalii
+        
         # 1. Filmy (np. "Polskie - Filmy (2026)")
         list_lang_movies = f"{lang_name} - Filmy ({CURRENT_YEAR})"
         params_lang_movies = {
