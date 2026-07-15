@@ -45,7 +45,7 @@ user_lists_cache = {}
 def fetch_user_lists():
     """Pobiera wszystkie listy użytkownika z API v4 i zapisuje do słownika {nazwa: id}."""
     global user_lists_cache
-    url = f"https://api.themoviedb.org/4/list/1"
+    url = f"https://api.themoviedb.org/4/account/{ACCOUNT_ID}/lists"
     page = 1
     user_lists_cache = {}
     
