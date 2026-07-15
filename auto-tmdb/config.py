@@ -83,3 +83,14 @@ DECADES = {
     "Lata 60": ("1960-01-01", "1969-12-31"),
     "Lata 50+": ("1900-01-01", "1959-12-31"),
 }
+
+LANGUAGES = {
+    "Polskie": "pl",
+    "Włoskie": "it",
+    "Hiszpańskie": "es",
+    "Francuskie": "fr",
+    "Czeskie": "cs",
+    "Niemieckie": "de",
+    "Koreańskie": "ko",
+    "Japońskie": "ja"
+}
