@@ -402,7 +402,7 @@ params_up_movies = {
     "without_keywords": exclude_keywords_str,
     "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
 }
-items_up_movies = discover_media("movie", params_up_movies, max_pages=5)
+items_up_movies = discover_media("movie", params_up_movies)
 update_tmdb_list(list_upcoming_movies, items_up_movies, clear=True)
 time.sleep(0.5)
 
@@ -415,7 +415,7 @@ params_up_series = {
     "without_keywords": exclude_keywords_str,
     "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
 }
-items_up_series = discover_media("tv", params_up_series, max_pages=5)
+items_up_series = discover_media("tv", params_up_series)
 update_tmdb_list(list_upcoming_series, items_up_series, clear=True)
 time.sleep(0.5)
 
