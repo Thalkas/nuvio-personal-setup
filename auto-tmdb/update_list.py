@@ -10,7 +10,9 @@ from config import (
     GENRES_SERIES,
     ADDITIONAL_GENRES_SERIES,
     PROVIDERS,
-    DECADES
+    DECADES,
+    EXCLUDE_GENRES,
+    EXCLUDE_KEYWORDS
 )
 
 # ==========================================
