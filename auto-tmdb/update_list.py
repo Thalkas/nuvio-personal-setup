@@ -172,7 +172,7 @@ def update_tmdb_list(list_name, items, clear=False):
         # Krótka pauza, aby nie przeciążyć API przy dużych aktualizacjach
         time.sleep(0.2)
 
-def discover_media(media_type, params, max_pages=5):
+def discover_media(media_type, params, max_pages=10):
     """
     Pobiera listę mediów z endpointu discover.
     Może pobrać więcej niż jedną stronę wyników (każda strona to max 20 pozycji).
