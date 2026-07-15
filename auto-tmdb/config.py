@@ -48,6 +48,22 @@ ADDITIONAL_GENRES_SERIES = {
     "Romans": 9840,
 }
 
+# Definiujemy gatunki TV do wykluczenia (Reality, Talk Show, News, Soap, Game Show)
+EXCLUDE_GENRES = {
+    "reality": 10764,
+    "talk_show": 10767,
+    "news": 10763,
+    "soap": 10766,
+    "game_show": 10762
+}
+
+# Definiujemy słowa kluczowe do wykluczenia (Stand-up, Reality TV, Variety Show)
+EXCLUDE_KEYWORDS = {
+    "stand-up": 9716,
+    "reality_tv": 210024,
+    "variety_show": 180547
+}
+
 PROVIDERS = {
     "Netflix": 8,
     "HBO Max": 1899,
