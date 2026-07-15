@@ -39,45 +39,6 @@ headers = {
 # Plink Config.py
 user_lists_cache = {}
 
-def delete_all_my_lists():
-    url = f"https://api.themoviedb.org/4/account/{ACCOUNT_ID}/lists"
-    page = 1
-    lists_to_delete = []
-
-    print("Pobieranie listy Twoich list z TMDB...")
-    while True:
-        response = requests.get(url, headers=headers, params={"page": page})
-        if response.status_code != 200:
-            print(f"Błąd podczas pobierania list: {response.text}")
-            break
-        data = response.json()
-        results = data.get("results", [])
-        if not results:
-            break
-        for lst in results:
-            lists_to_delete.append((lst["id"], lst["name"]))
-        if page >= data.get("total_pages", 1):
-            break
-        page += 1
-
-    if not lists_to_delete:
-        print("Nie znaleziono żadnych list do usunięcia.")
-        return
-
-    print(f"Rozpoczynam usuwanie {len(lists_to_delete)} list...")
-    
-    for list_id, list_name in lists_to_delete:
-        delete_url = f"https://api.themoviedb.org/4/list/{list_id}"
-        print(f"Usuwanie: '{list_name}' (ID: {list_id})...")
-        
-        res = requests.delete(delete_url, headers=headers)
-        if res.status_code == 200:
-            print(f"-> Sukces: Usunięto '{list_name}'")
-        else:
-            print(f"-> Błąd przy usuwaniu '{list_name}': {res.text}")
-        
-        time.sleep(0.5)
-
 # ==========================================
 # FUNKCJE POMOCNICZE
 # ==========================================
@@ -101,6 +62,51 @@ def fetch_user_lists():
         if page >= data.get("total_pages", 1):
             break
         page += 1
+
+def delete_all_my_lists():
+    url = f"https://api.themoviedb.org/4/account/{ACCOUNT_ID}/lists"
+    page = 1
+    lists_to_delete = []
+
+    print("Pobieranie listy Twoich list z TMDB...")
+    while True:
+        response = requests.get(url, headers=headers, params={"page": page})
+        if response.status_code != 200:
+            print(f"Błąd podczas pobierania list (Strona {page}): {response.status_code} - {response.text}")
+            break
+        
+        data = response.json()
+        results = data.get("results", [])
+        if not results:
+            break
+            
+        for lst in results:
+            lists_to_delete.append((lst["id"], lst["name"]))
+            
+        # Bezpieczniejsze sprawdzanie kolejnej strony
+        total_pages = data.get("total_pages", 1)
+        if page >= total_pages:
+            break
+        page += 1
+
+    if not lists_to_delete:
+        print("Nie znaleziono żadnych list do usunięcia na Twoim koncie.")
+        return
+
+    print(f"Znaleziono {len(lists_to_delete)} list. Rozpoczynam usuwanie...")
+    
+    for list_id, list_name in lists_to_delete:
+        delete_url = f"https://api.themoviedb.org/4/list/{list_id}"
+        print(f"Usuwanie: '{list_name}' (ID: {list_id})...")
+        
+        res = requests.delete(delete_url, headers=headers)
+        if res.status_code in [200, 204]:
+            print(f"-> Sukces: Usunięto '{list_name}'")
+        else:
+            # Ta linijka wyjaśni wszystko, jeśli TMDB odrzuci żądanie:
+            print(f"-> BŁĄD! Kod: {res.status_code} | Powód: {res.text}")
+        
+        time.sleep(0.5)
 
 def get_or_create_list(list_name):
     """Zwraca ID listy, tworząc ją najpierw, jeśli nie istnieje."""
