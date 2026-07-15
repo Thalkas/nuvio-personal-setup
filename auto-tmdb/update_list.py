@@ -126,7 +126,7 @@ def get_or_create_list(list_name):
         print(f"Błąd podczas tworzenia listy '{list_name}': {response.text}")
         return None
 
-def update_tmdb_list(list_name, items):
+def update_tmdb_list(list_name, items, clear=False):
     """Czyści listę i dodaje do niej nowe pozycje."""
     list_id = get_or_create_list(list_name)
     if not list_id:
