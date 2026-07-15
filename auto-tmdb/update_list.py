@@ -39,6 +39,45 @@ headers = {
 # Plink Config.py
 user_lists_cache = {}
 
+def delete_all_my_lists():
+    url = f"https://api.themoviedb.org/4/account/{ACCOUNT_ID}/lists"
+    page = 1
+    lists_to_delete = []
+
+    print("Pobieranie listy Twoich list z TMDB...")
+    while True:
+        response = requests.get(url, headers=headers, params={"page": page})
+        if response.status_code != 200:
+            print(f"Błąd podczas pobierania list: {response.text}")
+            break
+        data = response.json()
+        results = data.get("results", [])
+        if not results:
+            break
+        for lst in results:
+            lists_to_delete.append((lst["id"], lst["name"]))
+        if page >= data.get("total_pages", 1):
+            break
+        page += 1
+
+    if not lists_to_delete:
+        print("Nie znaleziono żadnych list do usunięcia.")
+        return
+
+    print(f"Rozpoczynam usuwanie {len(lists_to_delete)} list...")
+    
+    for list_id, list_name in lists_to_delete:
+        delete_url = f"https://api.themoviedb.org/4/list/{list_id}"
+        print(f"Usuwanie: '{list_name}' (ID: {list_id})...")
+        
+        res = requests.delete(delete_url, headers=headers)
+        if res.status_code == 200:
+            print(f"-> Sukces: Usunięto '{list_name}'")
+        else:
+            print(f"-> Błąd przy usuwaniu '{list_name}': {res.text}")
+        
+        time.sleep(0.5)
+
 # ==========================================
 # FUNKCJE POMOCNICZE
 # ==========================================
