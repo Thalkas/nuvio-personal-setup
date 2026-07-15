@@ -271,8 +271,16 @@ exclude_keywords_str = ",".join(str(val) for val in EXCLUDE_KEYWORDS.values())
 print("\n--- Generowanie list: Gatunek + Platforma + Rok 2026 (Dynamiczne Daty) ---")
     
 # Pobieramy dynamiczne daty dla nowości (poprzedni miesiąc + obecny)
-start_date, end_date = get_date_range(mode="recent")
-print(f"Filtrowanie premier w zakresie od {start_date} do {end_date}")
+# 1. Pobieramy dzisiejszą datę oraz obecny rok
+today_date = datetime.date.today()
+today_str = today_date.isoformat()
+current_year = today_date.year
+
+# 2. Dynamicznie obliczamy początek bieżącej dekady (np. dla 2026 wyjdzie 2020)
+decade_start_year = (current_year // 10) * 10
+decade_start_date = f"{decade_start_year}-01-01"   # np. "2020-01-01"
+decade_suffix = f"({decade_start_year}s)"          # np. "(2020s)"
+print(f"Filtrowanie premier w zakresie od {decade_start_date} do {today_str}")
     
 for prov_name, prov_id in PROVIDERS.items():
 # Odkomentuj jeśli chcesz testować tylko na SkyShowTime:
@@ -282,12 +290,13 @@ for prov_name, prov_id in PROVIDERS.items():
     # 1. Filmy dla standardowych gatunków i dodatkowych
     for g_dict, is_keyword in [(GENRES_MOVIES, False), (ADDITIONAL_GENRES_MOVIES, True)]:
         for g_name, g_val in g_dict.items():
-            list_name = f"{prov_name}: {g_name} ({CURRENT_YEAR})"
+            list_name = f"{prov_name}: {g_name}"
             params = {
-                "primary_release_date.gte": start_date,
-                "primary_release_date.lte": end_date,
+                "primary_release_date.gte": decade_start_year,
+                "primary_release_date.lte": today_str,
                 "with_watch_providers": prov_id,
                 "watch_region": REGION,
+                "vote_count.gte": 5,
                 "without_keywords": exclude_keywords_str,
                 "sort_by": "release_date.desc"
             }
@@ -296,19 +305,20 @@ for prov_name, prov_id in PROVIDERS.items():
             else:
                 params["with_genres"] = g_val
                 
-            items = discover_media("movie", params)
+            items = discover_media("movie", params, max_pages=100)
             update_tmdb_list(list_name, items)
             time.sleep(0.3)
     
     # 2. Seriale dla standardowych gatunków i dodatkowych
     for g_dict, is_keyword in [(GENRES_SERIES, False), (ADDITIONAL_GENRES_SERIES, True)]:
         for g_name, g_val in g_dict.items():
-            list_name = f"{prov_name} (Seriale): {g_name} ({CURRENT_YEAR})"
+            list_name = f"{prov_name} (Seriale): {g_name}"
             params = {
-                "first_air_date.gte": start_date,
-                "first_air_date.lte": end_date,
+                "first_air_date.gte": decade_start_year,
+                "first_air_date.lte": today_str,
                 "with_watch_providers": prov_id,
                 "watch_region": REGION,
+                "vote_count.gte": 5,
                 "without_genres": exclude_genres_str,
                 "without_keywords": exclude_keywords_str,
                 "sort_by": "first_air_date.desc"
@@ -318,7 +328,7 @@ for prov_name, prov_id in PROVIDERS.items():
             else:
                 params["with_genres"] = g_val
                 
-            items = discover_media("tv", params)
+            items = discover_media("tv", params, max_pages=100)
             update_tmdb_list(list_name, items)
             time.sleep(0.3)
     
