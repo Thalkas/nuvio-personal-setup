@@ -224,12 +224,22 @@ def get_date_range(mode="recent"):
         end_date = today + datetime.timedelta(days=90)
         return start_date.isoformat(), end_date.isoformat()
         
-    # Domyślna logika dla "recent"
-    if today.month == 1:
-        start_date = datetime.date(today.year - 1, 12, 1)
-    else:
-        start_date = datetime.date(today.year, today.month - 1, 1)
+    # Stara Logika dla "recent"
+    #if today.month == 1:
+    #    start_date = datetime.date(today.year - 1, 12, 1)
+    #else:
+    #    start_date = datetime.date(today.year, today.month - 1, 1)
         
+    #if today.month == 12:
+    #    end_date = datetime.date(today.year, 12, 31)
+    #else:
+    #    end_date = datetime.date(today.year, today.month + 1, 1) - datetime.timedelta(days=1)
+        
+    #return start_date.isoformat(), end_date.isoformat()
+    
+    # Nowa logika dla "recent" (Od 1 stycznia do końca obecnego miesiąca)
+    start_date = datetime.date(today.year, 1, 1)
+    
     if today.month == 12:
         end_date = datetime.date(today.year, 12, 31)
     else:
