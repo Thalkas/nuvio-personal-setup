@@ -86,27 +86,32 @@ DECADES = {
 
 LANGUAGES = {
     # --- EUROPA ---
-    "Polskie": "pl",
-    "Włoskie": "it",
-    "Hiszpańskie": "es",
-    "Francuskie": "fr",
-    "Niemieckie": "de",
-    "Czeskie": "cs",
-    "Tureckie": "tr",        
-    "Brytyjskie": "en",       # Język angielski, kraj GB
+    # SŁOWIAŃSKIE
+        "Polskie": "pl",
+        "Czeskie": "cs",
+        "Słowackie": "sk,
+        "Chorwackie": "hr",
+        "Węgierskie": "hu",
+    # ROMAŃSKIE
+        "Włoskie": "it",
+        "Hiszpańskie": "es",
+        "Francuskie": "fr",
+    # GERMAŃSKIE
+        "Niemieckie": "de",     
+        "Brytyjskie": "en",       # Język angielski, kraj GB
     # SKANDYNAWSKIE
-    "Norweskie": "no",
-    "Szweckie": "sv",
-    "Duńskie": "da",
-    
+        "Norweskie": "no",
+        "Szweckie": "sv",
+        "Duńskie": "da",
     # --- AZJA ---
-    "Koreańskie": "ko",       # Ogromny hit ostatnich lat (K-Dramas, thrillery)
-    "Japońskie": "ja",        # Klasyczne kino japońskie oraz Anime
-    "Chińskie": "zh",         # W tym produkcje z Hongkongu i Tajwanu
-    "Indyjskie": "hi",        # Bollywood i inne regiony Indii
-    
+        "Koreańskie": "ko",       # Ogromny hit ostatnich lat (K-Dramas, thrillery)
+        "Japońskie": "ja",        # Klasyczne kino japońskie oraz Anime
+        "Chińskie": "zh",         # W tym produkcje z Hongkongu i Tajwanu
+        "Indyjskie": "hi",        # Bollywood i inne regiony Indii
     # --- AMERYKA ŁACIŃSKA i AUSTRALIA ---
-    "Brazylijskie": "pt",     # Język portugalski, kraj BR
-    "Meksykańskie": "es",     # Język hiszpański, kraj MX (np. świetne dramaty i kryminały)
-    "Australijskie": "en"     # Język angielski, kraj AU
+        "Brazylijskie": "pt",     # Język portugalski, kraj BR
+        "Meksykańskie": "es",     # Język hiszpański, kraj MX (np. świetne dramaty i kryminały)
+        "Australijskie": "en",     # Język angielski, kraj AU
+    # INNE
+        "Tureckie": "tr"  
 }
