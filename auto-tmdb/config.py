@@ -92,9 +92,10 @@ LANGUAGES = {
     "Francuskie": "fr",
     "Niemieckie": "de",
     "Czeskie": "cs",
-    "Brytyjskie": "en",       # Uwaga: TMDB używa języka angielskiego ('en') dla UK, ale kraj 'GB' w params załatwi sprawę!
+    "Tureckie": "tr",        
+    "Brytyjskie": "en",       # Język angielski, kraj GB
     # SKANDYNAWSKIE
-    "Norweskie": "no",    # Można też użyć 'sv' (Szwecja) lub 'da' (Dania) - 'no' i kraj 'NO' da świetne norweskie kryminały
+    "Norweskie": "no",
     "Szweckie": "sv",
     "Duńskie": "da",
     
@@ -104,7 +105,8 @@ LANGUAGES = {
     "Chińskie": "zh",         # W tym produkcje z Hongkongu i Tajwanu
     "Indyjskie": "hi",        # Bollywood i inne regiony Indii
     
-    # --- AMERYKA ŁACIŃSKA ---
+    # --- AMERYKA ŁACIŃSKA i AUSTRALIA ---
     "Brazylijskie": "pt",     # Język portugalski, kraj BR
-    "Meksykańskie": "es"      # Język hiszpański, kraj MX (np. świetne dramaty i kryminały)
+    "Meksykańskie": "es",     # Język hiszpański, kraj MX (np. świetne dramaty i kryminały)
+    "Australijskie": "en"     # Język angielski, kraj AU
 }
