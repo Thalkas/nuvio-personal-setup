@@ -444,7 +444,7 @@ for lang_name, lang_code in LANGUAGES.items():
     # 1. Filmy (np. "Polskie - Filmy (2026)")
     list_lang_movies = f"{lang_name} - Filmy"
     params_lang_movies = {
-        "primary_release_date.gte": "1950-01-01", # <-- Pobiera filmy wydane od 1950 roku
+        "primary_release_date.gte": "2020-01-01", # <-- Pobiera filmy wydane od 1950 roku
         "primary_release_date.lte": today_str,    # <-- Do dzisiaj (odcina przyszłe i puste daty)
         "with_original_language": lang_code, # <-- np. "pl", "it", "es"
     #    "with_origin_country": country_code, # <-- np. "PL", "IT", "ES"
@@ -459,7 +459,7 @@ for lang_name, lang_code in LANGUAGES.items():
     # 2. Seriale (np. "Polskie - Seriale (2026)")
     list_lang_series = f"{lang_name} - Seriale"
     params_lang_series = {
-        "first_air_date.gte": "1950-01-01", # <-- Pobiera seriale od początku 1950 roku
+        "first_air_date.gte": "2020-01-01", # <-- Pobiera seriale od początku 1950 roku
         "first_air_date.lte": today_str,    # <-- Do dzisiaj (zapobiega przyszłym/błędnym datom)
         "with_original_language": lang_code, # <-- np. "pl", "it", "es"
     #    "with_origin_country": country_code, # <-- np. "PL", "IT", "ES"
