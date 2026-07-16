@@ -171,7 +171,7 @@ def update_tmdb_list(list_name, items, clear=False):
             print(f"  -> Błąd przy paczce {idx}/{len(chunks)}: {res.text}")
             
         # Krótka pauza, aby nie przeciążyć API przy dużych aktualizacjach
-        time.sleep(0.2)
+        time.sleep(0.5)
 
 def discover_media(media_type, params, max_pages=20):
     """
@@ -204,7 +204,7 @@ def discover_media(media_type, params, max_pages=20):
             break
             
         # Mała pauza między stronami
-        time.sleep(0.1)
+        time.sleep(0.5)
         
     return [{"media_type": media_type, "media_id": item["id"]} for item in all_results]
 
@@ -330,7 +330,7 @@ for prov_name, prov_id in PROVIDERS.items():
                 
             items = discover_media("tv", params, max_pages=100)
             update_tmdb_list(list_name, items)
-            time.sleep(0.3)
+            time.sleep(0.5)
     
     # ------------------------------------------
     # 2.2 GATUNKI OGÓLNE (PO POPULARNOŚCI)
