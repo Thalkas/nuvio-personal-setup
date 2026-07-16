@@ -357,14 +357,10 @@ for prov_name, prov_id in PROVIDERS.items():
                 # Pobieramy pierwszy element, który AKTUALNIE znajduje się na liście w TMDB
                 # (Musisz mieć funkcję, która zwraca ID filmów z danej listy, np. get_list_items)
                 current_list_items = get_tmdb_list_items(list_name) # <-- Twoja funkcja pobierająca zawartość listy
-                
                 if current_list_items and current_list_items[0] == items[0]:
                     print(f"-> Lista '{list_name}' jest aktualna (pierwszy element bez zmian). Pomijam aktualizację.")
                 else:
                     update_tmdb_list(list_name, items)
-            else:
-                print(f"Brak wyników z discover dla: '{list_name}'")
-                
             time.sleep(0.5)
     
     # 2. Seriale dla standardowych gatunków i dodatkowych
@@ -391,14 +387,10 @@ for prov_name, prov_id in PROVIDERS.items():
                 # Pobieramy pierwszy element, który AKTUALNIE znajduje się na liście w TMDB
                 # (Musisz mieć funkcję, która zwraca ID filmów z danej listy, np. get_list_items)
                 current_list_items = get_tmdb_list_items(list_name) # <-- Twoja funkcja pobierająca zawartość listy
-                
                 if current_list_items and current_list_items[0] == items[0]:
                     print(f"-> Lista '{list_name}' jest aktualna (pierwszy element bez zmian). Pomijam aktualizację.")
                 else:
                     update_tmdb_list(list_name, items)
-            else:
-                print(f"Brak wyników z discover dla: '{list_name}'")
-                
             time.sleep(0.5)
     
     # ------------------------------------------
@@ -447,12 +439,12 @@ params_movies = {
     "sort_by": "release_date.desc"
 }
 items_movies = discover_media("movie", params_movies)
-    if items_movies:
-        current_items = get_tmdb_list_items(list_name_movies)
-        if current_items and current_items[0] == items_movies[0]:
-            print(f"-> Lista '{list_name_movies}' jest aktualna. Pomijam.")
-        else:
-            update_tmdb_list(list_name_movies, items_movies)
+if items_movies:
+    current_items = get_tmdb_list_items(list_name_movies)
+    if current_items and current_items[0] == items_movies[0]:
+        print(f"-> Lista '{list_name_movies}' jest aktualna. Pomijam.")
+    else:
+        update_tmdb_list(list_name_movies, items_movies)
     time.sleep(0.5)
     
 # 2. Ogólne Nowości Seriale
@@ -466,11 +458,11 @@ params_series = {
 }
 items_series = discover_media("tv", params_series)
 if items_series:
-        current_items = get_tmdb_list_items(list_name_series)
-        if current_items and current_items[0] == items_series[0]:
-            print(f"-> Lista '{list_name_series}' jest aktualna. Pomijam.")
-        else:
-            update_tmdb_list(list_name_series, items_series)
+    current_items = get_tmdb_list_items(list_name_series)
+    if current_items and current_items[0] == items_series[0]:
+        print(f"-> Lista '{list_name_series}' jest aktualna. Pomijam.")
+    else:
+        update_tmdb_list(list_name_series, items_series)
 time.sleep(0.5)
     
     
@@ -493,11 +485,11 @@ params_up_movies = {
 }
 items_up_movies = discover_media("movie", params_up_movies)
 if items_up_movies:
-        current_items = get_tmdb_list_items(list_upcoming_movies)
-        if current_items and current_items[0] == items_up_movies[0]:
-            print(f"-> Lista '{list_upcoming_movies}' jest aktualna. Pomijam.")
-        else:
-            update_tmdb_list(list_upcoming_movies, items_up_movies, sort_by="popularity.desc", clear=True)
+    current_items = get_tmdb_list_items(list_upcoming_movies)
+    if current_items and current_items[0] == items_up_movies[0]:
+        print(f"-> Lista '{list_upcoming_movies}' jest aktualna. Pomijam.")
+    else:
+        update_tmdb_list(list_upcoming_movies, items_up_movies, sort_by="popularity.desc", clear=True)
 time.sleep(0.5)
     
     # 4. Ogólne Nadchodzące Premiery - Seriale
@@ -511,11 +503,11 @@ params_up_series = {
 }
 items_up_series = discover_media("tv", params_up_series)
 if items_up_series:
-        current_items = get_tmdb_list_items(list_upcoming_series)
-        if current_items and current_items[0] == items_up_series[0]:
-            print(f"-> Lista '{list_upcoming_series}' jest aktualna. Pomijam.")
-        else:
-            update_tmdb_list(list_upcoming_series, items_up_series, sort_by="popularity.desc", clear=True)
+    current_items = get_tmdb_list_items(list_upcoming_series)
+    if current_items and current_items[0] == items_up_series[0]:
+        print(f"-> Lista '{list_upcoming_series}' jest aktualna. Pomijam.")
+    else:
+        update_tmdb_list(list_upcoming_series, items_up_series, sort_by="popularity.desc", clear=True)
 time.sleep(0.5)
     
     # ==========================================
@@ -560,11 +552,11 @@ for lang_name, lang_code in LANGUAGES.items():
     }
     items_lang_movies = discover_media("movie", params_lang_movies, max_pages = 100)
     if items_lang_movies:
-            current_items = get_tmdb_list_items(list_lang_movies)
-            if current_items and current_items[0] == items_lang_movies[0]:
-                print(f"-> Lista '{list_lang_movies}' jest aktualna. Pomijam.")
-            else:
-                update_tmdb_list(list_lang_movies, items_lang_movies)
+        current_items = get_tmdb_list_items(list_lang_movies)
+        if current_items and current_items[0] == items_lang_movies[0]:
+            print(f"-> Lista '{list_lang_movies}' jest aktualna. Pomijam.")
+        else:
+            update_tmdb_list(list_lang_movies, items_lang_movies)
     time.sleep(0.5)
     
     # 2. Seriale (np. "Polskie - Seriale (2026)")
@@ -580,13 +572,12 @@ for lang_name, lang_code in LANGUAGES.items():
         "sort_by": "first_air_date.desc"
     }
     items_lang_series = discover_media("tv", params_lang_series, max_pages = 100)
-
     if items_lang_series:
-            current_items = get_tmdb_list_items(list_lang_series)
-            if current_items and current_items[0] == items_lang_series[0]:
-                print(f"-> Lista '{list_lang_series}' jest aktualna. Pomijam.")
-            else:
-                update_tmdb_list(list_lang_series, items_lang_series)
+        current_items = get_tmdb_list_items(list_lang_series)
+        if current_items and current_items[0] == items_lang_series[0]:
+            print(f"-> Lista '{list_lang_series}' jest aktualna. Pomijam.")
+        else:
+            update_tmdb_list(list_lang_series, items_lang_series)
     time.sleep(0.5)
     
 print("\n--- CAŁY PROCES ZAKOŃCZONY POMYŚLNIE! ---")
