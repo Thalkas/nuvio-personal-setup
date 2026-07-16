@@ -20,9 +20,9 @@ GENRES_MOVIES = {
 }
 
 ADDITIONAL_GENRES_MOVIES = {
-    "Bollywood": 355622,
-    "Komedia Romantyczna": 9799,
-    "Thriller Szpiegowski": 250808,
+    #"Bollywood": 355622,
+    #"Komedia Romantyczna": 9799,
+    #"Thriller Szpiegowski": 250808,
 }
 
 GENRES_SERIES = {
@@ -30,7 +30,7 @@ GENRES_SERIES = {
     "Animacja": 16,
     "Dokumentalny": 99,
     "Dramat": 18,
-    "Dziecięcy": 10762,
+    #"Dziecięcy": 10762,
     "Familijny": 10751,
     "Komedia": 35,
     "Kryminał": 80,
