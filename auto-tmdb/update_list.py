@@ -169,7 +169,7 @@ def get_tmdb_list_items(list_name):
 
     return items
 
-def update_tmdb_list(list_name, items, clear=False):
+def update_tmdb_list(list_name, items, sort_by=None, clear=False):
     """Aktualizuje listę, opcjonalnie czyszcząc ją i dodając WSZYSTKIE przekazane pozycje w paczkach po 20."""
     list_id = get_or_create_list(list_name)
     if not list_id:
@@ -183,9 +183,22 @@ def update_tmdb_list(list_name, items, clear=False):
         if res_clear.status_code not in [200, 201]:
             print(f"Problem z czyszczeniem listy '{list_name}': {res_clear.text}")
 
-    if not items:
-        print(f"Brak nowych filmów/seriali dla '{list_name}'.")
-        return
+    # 1.5. Sortowanie listy
+    if not sort_by:
+        # Jeśli nie przekazano parametru jawnie, wybieramy domyślne sortowanie po dacie
+        if "Seriale" in list_name:
+            sort_by = "first_air_date.desc"
+        else:
+            sort_by = "release_date.desc"
+        
+    update_settings_url = f"https://api.themoviedb.org/4/list/{list_id}"
+    settings_payload = {"sort_by": sort_by}
+    
+    res_settings = requests.put(update_settings_url, headers=headers, json=settings_payload)
+    if res_settings.status_code == 200:
+        print(f"-> Ustawiono sortowanie listy '{list_name}' na: '{sort_by}'")
+    else:
+        print(f"-> Nie udało się wymusić sortowania na TMDB: {res_settings.text}")
 
     # 2. Dzielenie listy na paczki po maksymalnie 20 elementów (limit API v4)
     chunk_size = 20
@@ -484,7 +497,7 @@ if items_up_movies:
         if current_items and current_items[0] == items_up_movies[0]:
             print(f"-> Lista '{list_upcoming_movies}' jest aktualna. Pomijam.")
         else:
-            update_tmdb_list(list_upcoming_movies, items_up_movies, clear=True)
+            update_tmdb_list(list_upcoming_movies, items_up_movies, sort_by="popularity.desc", clear=True)
 time.sleep(0.5)
     
     # 4. Ogólne Nadchodzące Premiery - Seriale
@@ -502,7 +515,7 @@ if items_up_series:
         if current_items and current_items[0] == items_up_series[0]:
             print(f"-> Lista '{list_upcoming_series}' jest aktualna. Pomijam.")
         else:
-            update_tmdb_list(list_upcoming_series, items_up_series, clear=True)
+            update_tmdb_list(list_upcoming_series, items_up_series, sort_by="popularity.desc", clear=True)
 time.sleep(0.5)
     
     # ==========================================
