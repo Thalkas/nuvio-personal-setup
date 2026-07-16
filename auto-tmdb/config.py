@@ -36,14 +36,14 @@ GENRES_SERIES = {
     "Kryminał": 80,
     "Sci-Fi i Fantasy": 10765,
     "Tajemnica": 9648,
-    "Thriller": 53,
     "Western": 37,
     "Wojenne i Polityczne": 10768,
 }
 
 ADDITIONAL_GENRES_SERIES = {
-    "Historyczny": 36,
-    "Horror": 3133,
+    "Historyczny": 282633,
+    "Horror": 315058,
+    "Thriller": 316362,
     "Muzyczny": 10402,
     "Romans": 9840,
 }
