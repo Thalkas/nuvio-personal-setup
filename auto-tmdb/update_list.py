@@ -481,7 +481,9 @@ params_up_movies = {
     "release_date.gte": upcoming_start,
     "release_date.lte": upcoming_end,
     "without_keywords": exclude_keywords_str,
-    "popularity.gte": 3.0,
+    #"watch_region": REGION,
+    "vote_count.gte": 1,
+    "popularity.gte": 5.0,
     "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
 }
 items_up_movies = discover_media("movie", params_up_movies, max_pages = 100)
@@ -500,7 +502,9 @@ params_up_series = {
     "air_date.lte": upcoming_end,
     "without_genres": exclude_genres_str,
     "without_keywords": exclude_keywords_str,
-    "popularity.gte": 3.0,
+    #"watch_region": REGION,
+    "vote_count.gte": 1,
+    "popularity.gte": 5.0,
     "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
 }
 items_up_series = discover_media("tv", params_up_series, max_pages = 100)
