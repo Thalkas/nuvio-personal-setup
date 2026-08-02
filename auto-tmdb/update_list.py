@@ -482,8 +482,8 @@ params_up_movies = {
     "release_date.lte": upcoming_end,
     "without_keywords": exclude_keywords_str,
     "with_release_type": "2|3|4",  # Tylko premiery (Kino/Digital), bez powtórek
-    "with_original_language": "en|pl|cs|sk|hr|hu|it|es|fr|de|no|sv|da",  # Wyklucza lokalny spam bez dystrybucji globalnej
-    "popularity.gte": 5.0,
+    "with_original_language": "en|pl|no|sv|da",  # Wyklucza lokalny spam bez dystrybucji globalnej
+    "popularity.gte": 10.0,
     "sort_by": "popularity.desc"
 }
 items_up_movies = discover_media("movie", params_up_movies, max_pages=100)
@@ -502,8 +502,8 @@ params_up_new_series = {
     "first_air_date.lte": upcoming_end,
     "without_genres": exclude_genres_str,
     "without_keywords": exclude_keywords_str,
-    "with_original_language": "en|pl|cs|sk|hr|hu|it|es|fr|de|no|sv|da",  # Wyklucza lokalny spam
-    "popularity.gte": 5.0,
+    "popularity.gte": 8.0,
+    "with_original_language": "en|pl|no|sv|da",  # Wyklucza lokalny spam
     "sort_by": "popularity.desc"
 }
 items_up_new_series = discover_media("tv", params_up_new_series, max_pages=100)
@@ -523,8 +523,9 @@ params_up_returning_series = {
     "first_air_date.lte": upcoming_start,  # Debiut miał miejsce wcześniej (to NIE jest 1. sezon!)
     "without_genres": exclude_genres_str,
     "without_keywords": exclude_keywords_str,
-    "with_original_language": "en|pl|cs|sk|hr|hu|it|es|fr|de|no|sv|da",
-    "popularity.gte": 5.0,
+    "popularity.gte": 8.0,
+    "with_status": "0|2|5",                  # 0 = In Production, 2 = Returning Series, 5 = Planned (Statusy aktywne w TMDB)
+    "with_original_language": "en|pl|no|sv|da",
     "sort_by": "popularity.desc"
 }
 items_up_returning_series = discover_media("tv", params_up_returning_series, max_pages=100)
