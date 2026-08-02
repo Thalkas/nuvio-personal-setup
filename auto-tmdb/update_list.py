@@ -478,12 +478,13 @@ print(f"Filtrowanie nadchodzących premier w zakresie od {upcoming_start} do {up
     # 3. Ogólne Nadchodzące Premiery - Filmy
 list_upcoming_movies = f"Nadchodzące Premiery - Filmy ({CURRENT_YEAR})"
 params_up_movies = {
-    "primary_release_date.gte": upcoming_start,
-    "primary_release_date.lte": upcoming_end,
+    "release_date.gte": upcoming_start,
+    "release_date.lte": upcoming_end,
     "without_keywords": exclude_keywords_str,
+    "popularity.gte": 3.0,
     "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
 }
-items_up_movies = discover_media("movie", params_up_movies)
+items_up_movies = discover_media("movie", params_up_movies, max_pages = 100)
 if items_up_movies:
     current_items = get_tmdb_list_items(list_upcoming_movies)
     if current_items and current_items[0] == items_up_movies[0]:
@@ -495,13 +496,14 @@ time.sleep(0.5)
     # 4. Ogólne Nadchodzące Premiery - Seriale
 list_upcoming_series = f"Nadchodzące Premiery - Seriale ({CURRENT_YEAR})"
 params_up_series = {
-    "first_air_date.gte": upcoming_start,
-    "first_air_date.lte": upcoming_end,
+    "air_date.gte": upcoming_start,
+    "air_date.lte": upcoming_end,
     "without_genres": exclude_genres_str,
     "without_keywords": exclude_keywords_str,
+    "popularity.gte": 3.0,
     "sort_by": "popularity.desc"  # Zmieniono na .desc, by najpopularniejsze były na górze
 }
-items_up_series = discover_media("tv", params_up_series)
+items_up_series = discover_media("tv", params_up_series, max_pages = 100)
 if items_up_series:
     current_items = get_tmdb_list_items(list_upcoming_series)
     if current_items and current_items[0] == items_up_series[0]:
