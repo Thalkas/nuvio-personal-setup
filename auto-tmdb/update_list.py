@@ -430,7 +430,7 @@ params_up_returning_series = {
     "air_date.lte": upcoming_end,
     "first_air_date.lte": upcoming_start,   # Debiut miał miejsce wcześniej (to nie S01E01)
     "with_status": "0|2|5",
-    "with_original_language": MAIN_LANGUAGES,
+    "with_original_language": "en|pl|no|sv|da",  # Wyklucza lokalny spam bez dystrybucji globalnej
     "without_genres": exclude_genres_str,
     "without_keywords": exclude_keywords_str,
     "popularity.gte": 8.0,
