@@ -466,75 +466,75 @@ if items_series:
 time.sleep(0.5)
     
     
-# ==========================================
+    # ==========================================
     # 2.7 i 2.8 NADCHODZĄCE PREMIERY - OGÓLNE (DYNAMICZNE OKNO +3 MIESIĄCE)
     # ==========================================
-    print("\n--- Generowanie list: Ogólne Nadchodzące Premiery (Dynamiczne Daty) ---")
+print("\n--- Generowanie list: Ogólne Nadchodzące Premiery (Dynamiczne Daty) ---")
     
     # Pobieramy zakres: od jutra do +90 dni
-    upcoming_start, upcoming_end = get_date_range(mode="upcoming")
-    print(f"Filtrowanie nadchodzących premier w zakresie od {upcoming_start} do {upcoming_end}")
+upcoming_start, upcoming_end = get_date_range(mode="upcoming")
+print(f"Filtrowanie nadchodzących premier w zakresie od {upcoming_start} do {upcoming_end}")
     
     # 1. NADCHODZĄCE FILMY (Nowe, wartościowe, bez re-emisji)
-    list_upcoming_movies = f"Nadchodzące Premiery - Filmy ({CURRENT_YEAR})"
-    params_up_movies = {
-        "release_date.gte": upcoming_start,
-        "release_date.lte": upcoming_end,
-        "without_keywords": exclude_keywords_str,
-        "with_release_type": "2|3|4",  # Tylko premiery (Kino/Digital), bez powtórek
-        "with_original_language": "en|pl|cs|sk|hr|hu|it|es|fr|de|no|sv|da",  # Wyklucza lokalny spam bez dystrybucji globalnej
-        "popularity.gte": 3.0,
-        "sort_by": "popularity.desc"
-    }
-    items_up_movies = discover_media("movie", params_up_movies, max_pages=100)
-    if items_up_movies:
-        current_items = get_tmdb_list_items(list_upcoming_movies)
-        if current_items and current_items[0] == items_up_movies[0]:
-            print(f"-> Lista '{list_upcoming_movies}' jest aktualna. Pomijam.")
-        else:
-            update_tmdb_list(list_upcoming_movies, items_up_movies, sort_by="popularity.desc", clear=True)
-    time.sleep(0.5)
+list_upcoming_movies = f"Nadchodzące Premiery - Filmy ({CURRENT_YEAR})"
+params_up_movies = {
+    "release_date.gte": upcoming_start,
+    "release_date.lte": upcoming_end,
+    "without_keywords": exclude_keywords_str,
+    "with_release_type": "2|3|4",  # Tylko premiery (Kino/Digital), bez powtórek
+    "with_original_language": "en|pl|cs|sk|hr|hu|it|es|fr|de|no|sv|da",  # Wyklucza lokalny spam bez dystrybucji globalnej
+    "popularity.gte": 3.0,
+    "sort_by": "popularity.desc"
+}
+items_up_movies = discover_media("movie", params_up_movies, max_pages=100)
+if items_up_movies:
+    current_items = get_tmdb_list_items(list_upcoming_movies)
+    if current_items and current_items[0] == items_up_movies[0]:
+        print(f"-> Lista '{list_upcoming_movies}' jest aktualna. Pomijam.")
+    else:
+        update_tmdb_list(list_upcoming_movies, items_up_movies, sort_by="popularity.desc", clear=True)
+time.sleep(0.5)
     
     # 2. ZUPEŁNIE NOWE SERIALE (Tylko Debiuty / Sezon 1)
-    list_upcoming_new_series = f"Nadchodzące Premiery - Nowe Seriale ({CURRENT_YEAR})"
-    params_up_new_series = {
-        "first_air_date.gte": upcoming_start,
-        "first_air_date.lte": upcoming_end,
-        "without_genres": exclude_genres_str,
-        "without_keywords": exclude_keywords_str,
-        "with_original_language": "en|pl|cs|sk|hr|hu|it|es|fr|de|no|sv|da",  # Wyklucza lokalny spam
-        "popularity.gte": 3.0,
-        "sort_by": "popularity.desc"
-    }
-    items_up_new_series = discover_media("tv", params_up_new_series, max_pages=100)
-    if items_up_new_series:
-        current_items = get_tmdb_list_items(list_upcoming_new_series)
-        if current_items and current_items[0] == items_up_new_series[0]:
-            print(f"-> Lista '{list_upcoming_new_series}' jest aktualna. Pomijam.")
-        else:
-            update_tmdb_list(list_upcoming_new_series, items_up_new_series, sort_by="popularity.desc", clear=True)
-    time.sleep(0.5)
+list_upcoming_new_series = f"Nadchodzące Premiery - Nowe Seriale ({CURRENT_YEAR})"
+params_up_new_series = {
+    "first_air_date.gte": upcoming_start,
+    "first_air_date.lte": upcoming_end,
+    "without_genres": exclude_genres_str,
+    "without_keywords": exclude_keywords_str,
+    "with_original_language": "en|pl|cs|sk|hr|hu|it|es|fr|de|no|sv|da",  # Wyklucza lokalny spam
+    "popularity.gte": 3.0,
+    "sort_by": "popularity.desc"
+}
+items_up_new_series = discover_media("tv", params_up_new_series, max_pages=100)
+if items_up_new_series:
+    current_items = get_tmdb_list_items(list_upcoming_new_series)
+    if current_items and current_items[0] == items_up_new_series[0]:
+        print(f"-> Lista '{list_upcoming_new_series}' jest aktualna. Pomijam.")
+    else:
+        update_tmdb_list(list_upcoming_new_series, items_up_new_series, sort_by="popularity.desc", clear=True)
+time.sleep(0.5)
 
     # 3. POWRACAJĄCE SERIALE (Nowe Sezony znanych serii)
-    list_upcoming_returning_series = f"Nadchodzące Premiery - Nowe Sezony Seriali ({CURRENT_YEAR})"
-    params_up_returning_series = {
-        "air_date.gte": upcoming_start,
-        "air_date.lte": upcoming_end,
-        "first_air_date.lte": upcoming_start,  # Debiut miał miejsce wcześniej (to NIE jest 1. sezon!)
-        "without_genres": exclude_genres_str,
-        "without_keywords": exclude_keywords_str,
-        "with_original_language": "en|pl|cs|sk|hr|hu|it|es|fr|de|no|sv|da",
-        "popularity.gte": 3.0,
-        "sort_by": "popularity.desc"
-    }
-    items_up_returning_series = discover_media("tv", params_up_returning_series, max_pages=100)
-    if items_up_returning_series:
-        current_items = get_tmdb_list_items(list_upcoming_returning_series)
-        if current_items and current_items[0] == items_up_returning_series[0]:
-            print(f"-> Lista '{list_upcoming_returning_series}' jest aktualna. Pomijam.")
-        else:
-            update_tmdb_list(list_upcoming_returning_series, items_up_returning_series, sort_by="popularity.desc", clear=True)
-    time.sleep(0.5)
+list_upcoming_returning_series = f"Nadchodzące Premiery - Nowe Sezony Seriali ({CURRENT_YEAR})"
+params_up_returning_series = {
+    "air_date.gte": upcoming_start,
+    "air_date.lte": upcoming_end,
+    "first_air_date.lte": upcoming_start,  # Debiut miał miejsce wcześniej (to NIE jest 1. sezon!)
+    "without_genres": exclude_genres_str,
+    "without_keywords": exclude_keywords_str,
+    "with_original_language": "en|pl|cs|sk|hr|hu|it|es|fr|de|no|sv|da",
+    "popularity.gte": 3.0,
+    "sort_by": "popularity.desc"
+}
+items_up_returning_series = discover_media("tv", params_up_returning_series, max_pages=100)
+if items_up_returning_series:
+    current_items = get_tmdb_list_items(list_upcoming_returning_series)
+    if current_items and current_items[0] == items_up_returning_series[0]:
+        print(f"-> Lista '{list_upcoming_returning_series}' jest aktualna. Pomijam.")
+    else:
+        update_tmdb_list(list_upcoming_returning_series, items_up_returning_series, sort_by="popularity.desc", clear=True)
+time.sleep(0.5)
     
     # ==========================================
     # 2.9 i 3.0 PRODUKCJE Z KONKRETNYCH KRAJÓW / JĘZYKA
