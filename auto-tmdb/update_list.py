@@ -297,6 +297,28 @@ def get_date_range(mode="recent"):
         
     return start_date.isoformat(), end_date.isoformat()
 
+def is_new_season_premiere(tv_id, start_date, end_date):
+    """
+    Sprawdza, czy w danym oknie czasowym przypada premiera 1. ODCINKA nowego sezonu.
+    """
+    url = f"https://api.themoviedb.org/3/tv/{tv_id}"
+    try:
+        response = session.get(url, headers=headers, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            next_ep = data.get("next_episode_to_air")
+            
+            if next_ep:
+                ep_number = next_ep.get("episode_number")
+                air_date = next_ep.get("air_date")
+                
+                # Warunek: Musi to być 1. odcinek I jego data musi mieścić się w zakresie premier
+                if ep_number == 1 and air_date and (start_date <= air_date <= end_date):
+                    return True
+    except Exception as e:
+        print(f"Błąd sprawdzania szczegółów serialu {tv_id}: {e}")
+    return False
+
     # ==========================================
     # URUCHOMIENIE PROCESU AKTUALIZACJI
     # ==========================================
@@ -403,19 +425,33 @@ if items_up_new_series:
 time.sleep(0.5)
 
     # 3. POWRACAJĄCE SERIALE (Nowe Sezony znanych serii)
-list_upcoming_returning_series = f"Nadchodzące Premiery - Nowe Sezony Seriali ({CURRENT_YEAR})"
+list_upcoming_returning_series = f"Nadchodzące Premiery - Powracające Sezony ({CURRENT_YEAR})"
 params_up_returning_series = {
     "air_date.gte": upcoming_start,
     "air_date.lte": upcoming_end,
-    "first_air_date.lte": upcoming_start,  # Debiut miał miejsce wcześniej (to NIE jest 1. sezon!)
+    "first_air_date.lte": upcoming_start,   # Debiut miał miejsce wcześniej (to nie S01E01)
+    "with_status": "0|2|5",
+    "with_original_language": MAIN_LANGUAGES,
     "without_genres": exclude_genres_str,
     "without_keywords": exclude_keywords_str,
     "popularity.gte": 8.0,
-    "with_status": "0|2|5",                  # 0 = In Production, 2 = Returning Series, 5 = Planned (Statusy aktywne w TMDB)
-    "with_original_language": "en|pl|no|sv|da",
     "sort_by": "popularity.desc"
 }
-items_up_returning_series = discover_media("tv", params_up_returning_series, max_pages=100)
+    
+    # Step 1: Pobieramy wstępną listę z Discover
+raw_returning_series = discover_media("tv", params_up_returning_series, max_pages=50)
+    
+    # Step 2: Precyzyjne filtrowanie - zostawiamy TYLKO te, które mają premierę 1. odcinka nowego sezonu
+items_up_returning_series = []
+print("-> Weryfikacja premier 1. odcinka dla powracających sezonów...")
+    
+for tv_id in raw_returning_series:
+    if is_new_season_premiere(tv_id, upcoming_start, upcoming_end):
+        items_up_returning_series.append(tv_id)
+            
+print(f"-> Przefiltrowano: z {len(raw_returning_series)} seriali wybrano {len(items_up_returning_series)} ze startem nowego sezonu (E01).")
+
+    # Step 3: Aktualizacja listy TMDB
 if items_up_returning_series:
     current_items = get_tmdb_list_items(list_upcoming_returning_series)
     if current_items and current_items[0] == items_up_returning_series[0]:
