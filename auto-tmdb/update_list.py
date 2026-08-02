@@ -311,120 +311,7 @@ fetch_user_lists()
 # Generowanie ciągów ID do wykluczenia (wyciąga wartości ze słowników i łączy przecinkami)
 exclude_genres_str = ",".join(str(val) for val in EXCLUDE_GENRES.values())
 exclude_keywords_str = ",".join(str(val) for val in EXCLUDE_KEYWORDS.values())
-    
-    # ------------------------------------------
-    # 2.1 GATUNEK + PLATFORMA + OBECNY ROK
-    # ------------------------------------------
-print("\n--- Generowanie list: Gatunek + Platforma + Rok 2026 (Dynamiczne Daty) ---")
-    
-# Pobieramy dynamiczne daty dla nowości (poprzedni miesiąc + obecny)
-# 1. Pobieramy dzisiejszą datę oraz obecny rok
-today_date = datetime.date.today()
-today_str = today_date.isoformat()
-current_year = today_date.year
 
-# 2. Dynamicznie obliczamy początek bieżącej dekady (np. dla 2026 wyjdzie 2020)
-decade_start_year = (current_year // 10) * 10
-decade_start_date = f"{decade_start_year}-01-01"   # np. "2020-01-01"
-decade_suffix = f"({decade_start_year}s)"          # np. "(2020s)"
-print(f"Filtrowanie premier w zakresie od {decade_start_date} do {today_str}")
-    
-for prov_name, prov_id in PROVIDERS.items():
-# Odkomentuj jeśli chcesz testować tylko na SkyShowTime:
-# if prov_name != "SkyShowTime":
-#     continue
-    
-    # 1. Filmy dla standardowych gatunków i dodatkowych
-    for g_dict, is_keyword in [(GENRES_MOVIES, False), (ADDITIONAL_GENRES_MOVIES, True)]:
-        for g_name, g_val in g_dict.items():
-            list_name = f"{prov_name}: {g_name}"
-            params = {
-                "primary_release_date.gte": decade_start_year,
-                "primary_release_date.lte": today_str,
-                "with_watch_providers": prov_id,
-                "watch_region": REGION,
-                "vote_count.gte": 5,
-                "without_keywords": exclude_keywords_str,
-                "sort_by": "release_date.desc"
-            }
-            if is_keyword:
-                params["with_keywords"] = g_val
-            else:
-                params["with_genres"] = g_val
-                
-            items = discover_media("movie", params, max_pages=100)
-            if items:
-                # Pobieramy pierwszy element, który AKTUALNIE znajduje się na liście w TMDB
-                # (Musisz mieć funkcję, która zwraca ID filmów z danej listy, np. get_list_items)
-                current_list_items = get_tmdb_list_items(list_name) # <-- Twoja funkcja pobierająca zawartość listy
-                if current_list_items and current_list_items[0] == items[0]:
-                    print(f"-> Lista '{list_name}' jest aktualna (pierwszy element bez zmian). Pomijam aktualizację.")
-                else:
-                    update_tmdb_list(list_name, items)
-            time.sleep(0.5)
-    
-    # 2. Seriale dla standardowych gatunków i dodatkowych
-    for g_dict, is_keyword in [(GENRES_SERIES, False), (ADDITIONAL_GENRES_SERIES, True)]:
-        for g_name, g_val in g_dict.items():
-            list_name = f"{prov_name} (Seriale): {g_name}"
-            params = {
-                "first_air_date.gte": decade_start_year,
-                "first_air_date.lte": today_str,
-                "with_watch_providers": prov_id,
-                "watch_region": REGION,
-                "vote_count.gte": 5,
-                "without_genres": exclude_genres_str,
-                "without_keywords": exclude_keywords_str,
-                "sort_by": "first_air_date.desc"
-            }
-            if is_keyword:
-                params["with_keywords"] = g_val
-            else:
-                params["with_genres"] = g_val
-                
-            items = discover_media("tv", params, max_pages=100)
-            if items:
-                # Pobieramy pierwszy element, który AKTUALNIE znajduje się na liście w TMDB
-                # (Musisz mieć funkcję, która zwraca ID filmów z danej listy, np. get_list_items)
-                current_list_items = get_tmdb_list_items(list_name) # <-- Twoja funkcja pobierająca zawartość listy
-                if current_list_items and current_list_items[0] == items[0]:
-                    print(f"-> Lista '{list_name}' jest aktualna (pierwszy element bez zmian). Pomijam aktualizację.")
-                else:
-                    update_tmdb_list(list_name, items)
-            time.sleep(0.5)
-    
-    # ------------------------------------------
-    # 2.2 GATUNKI OGÓLNE (PO POPULARNOŚCI)
-    # ------------------------------------------
-#print("\n--- Generowanie list: Gatunki Ogólne (2026) ---")
-#for g_name, g_id in GENRES_MOVIES.items():
-#    list_name = f"{g_name} ({CURRENT_YEAR})"
-#    params = {
-#        "primary_release_year": CURRENT_YEAR,
-#        "with_genres": g_id,
-#        "sort_by": "popularity.desc"
-#    }
-#    items = discover_media("movie", params)
-#    update_tmdb_list(list_name, items)
-#    time.sleep(0.3)
-    
-    # ------------------------------------------
-    # 2.3 DEKADY
-# ------------------------------------------
-#print("\n--- Generowanie list: Dekady (Filmy) ---")
-#for dec_name, (start_date, end_date) in DECADES.items():
-#    for g_name, g_id in GENRES_MOVIES.items():
-#        list_name = f"{dec_name}: {g_name}"
-#        params = {
-#            "primary_release_date.gte": start_date,
-#            "primary_release_date.lte": end_date,
-#            "with_genres": g_id,
-#            "sort_by": "popularity.desc"
-#        }
-#        items = discover_media("movie", params)
-#        update_tmdb_list(list_name, items)
-#        time.sleep(0.5)
-    
     # ==========================================
     # 2.5 i 2.6 NOWOŚCI (FILMY & SERIALE) - OGÓLNE
     # ==========================================
@@ -606,5 +493,118 @@ for lang_name, lang_code in LANGUAGES.items():
         else:
             update_tmdb_list(list_lang_series, items_lang_series)
     time.sleep(0.5)
+
+    # ------------------------------------------
+    # 2.1 GATUNEK + PLATFORMA + OBECNY ROK
+    # ------------------------------------------
+print("\n--- Generowanie list: Gatunek + Platforma + Rok 2026 (Dynamiczne Daty) ---")
+    
+# Pobieramy dynamiczne daty dla nowości (poprzedni miesiąc + obecny)
+# 1. Pobieramy dzisiejszą datę oraz obecny rok
+today_date = datetime.date.today()
+today_str = today_date.isoformat()
+current_year = today_date.year
+
+# 2. Dynamicznie obliczamy początek bieżącej dekady (np. dla 2026 wyjdzie 2020)
+decade_start_year = (current_year // 10) * 10
+decade_start_date = f"{decade_start_year}-01-01"   # np. "2020-01-01"
+decade_suffix = f"({decade_start_year}s)"          # np. "(2020s)"
+print(f"Filtrowanie premier w zakresie od {decade_start_date} do {today_str}")
+    
+for prov_name, prov_id in PROVIDERS.items():
+# Odkomentuj jeśli chcesz testować tylko na SkyShowTime:
+# if prov_name != "SkyShowTime":
+#     continue
+    
+    # 1. Filmy dla standardowych gatunków i dodatkowych
+    for g_dict, is_keyword in [(GENRES_MOVIES, False), (ADDITIONAL_GENRES_MOVIES, True)]:
+        for g_name, g_val in g_dict.items():
+            list_name = f"{prov_name}: {g_name}"
+            params = {
+                "primary_release_date.gte": decade_start_year,
+                "primary_release_date.lte": today_str,
+                "with_watch_providers": prov_id,
+                "watch_region": REGION,
+                "vote_count.gte": 5,
+                "without_keywords": exclude_keywords_str,
+                "sort_by": "release_date.desc"
+            }
+            if is_keyword:
+                params["with_keywords"] = g_val
+            else:
+                params["with_genres"] = g_val
+                
+            items = discover_media("movie", params, max_pages=100)
+            if items:
+                # Pobieramy pierwszy element, który AKTUALNIE znajduje się na liście w TMDB
+                # (Musisz mieć funkcję, która zwraca ID filmów z danej listy, np. get_list_items)
+                current_list_items = get_tmdb_list_items(list_name) # <-- Twoja funkcja pobierająca zawartość listy
+                if current_list_items and current_list_items[0] == items[0]:
+                    print(f"-> Lista '{list_name}' jest aktualna (pierwszy element bez zmian). Pomijam aktualizację.")
+                else:
+                    update_tmdb_list(list_name, items)
+            time.sleep(0.5)
+    
+    # 2. Seriale dla standardowych gatunków i dodatkowych
+    for g_dict, is_keyword in [(GENRES_SERIES, False), (ADDITIONAL_GENRES_SERIES, True)]:
+        for g_name, g_val in g_dict.items():
+            list_name = f"{prov_name} (Seriale): {g_name}"
+            params = {
+                "first_air_date.gte": decade_start_year,
+                "first_air_date.lte": today_str,
+                "with_watch_providers": prov_id,
+                "watch_region": REGION,
+                "vote_count.gte": 5,
+                "without_genres": exclude_genres_str,
+                "without_keywords": exclude_keywords_str,
+                "sort_by": "first_air_date.desc"
+            }
+            if is_keyword:
+                params["with_keywords"] = g_val
+            else:
+                params["with_genres"] = g_val
+                
+            items = discover_media("tv", params, max_pages=100)
+            if items:
+                # Pobieramy pierwszy element, który AKTUALNIE znajduje się na liście w TMDB
+                # (Musisz mieć funkcję, która zwraca ID filmów z danej listy, np. get_list_items)
+                current_list_items = get_tmdb_list_items(list_name) # <-- Twoja funkcja pobierająca zawartość listy
+                if current_list_items and current_list_items[0] == items[0]:
+                    print(f"-> Lista '{list_name}' jest aktualna (pierwszy element bez zmian). Pomijam aktualizację.")
+                else:
+                    update_tmdb_list(list_name, items)
+            time.sleep(0.5)
+    
+    # ------------------------------------------
+    # 2.2 GATUNKI OGÓLNE (PO POPULARNOŚCI)
+    # ------------------------------------------
+#print("\n--- Generowanie list: Gatunki Ogólne (2026) ---")
+#for g_name, g_id in GENRES_MOVIES.items():
+#    list_name = f"{g_name} ({CURRENT_YEAR})"
+#    params = {
+#        "primary_release_year": CURRENT_YEAR,
+#        "with_genres": g_id,
+#        "sort_by": "popularity.desc"
+#    }
+#    items = discover_media("movie", params)
+#    update_tmdb_list(list_name, items)
+#    time.sleep(0.3)
+    
+    # ------------------------------------------
+    # 2.3 DEKADY
+# ------------------------------------------
+#print("\n--- Generowanie list: Dekady (Filmy) ---")
+#for dec_name, (start_date, end_date) in DECADES.items():
+#    for g_name, g_id in GENRES_MOVIES.items():
+#        list_name = f"{dec_name}: {g_name}"
+#        params = {
+#            "primary_release_date.gte": start_date,
+#            "primary_release_date.lte": end_date,
+#            "with_genres": g_id,
+#            "sort_by": "popularity.desc"
+#        }
+#        items = discover_media("movie", params)
+#        update_tmdb_list(list_name, items)
+#        time.sleep(0.5)
     
 print("\n--- CAŁY PROCES ZAKOŃCZONY POMYŚLNIE! ---")
