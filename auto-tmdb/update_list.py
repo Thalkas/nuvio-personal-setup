@@ -483,7 +483,7 @@ params_up_movies = {
     "without_keywords": exclude_keywords_str,
     "with_release_type": "2|3|4",  # Tylko premiery (Kino/Digital), bez powtórek
     "with_original_language": "en|pl|cs|sk|hr|hu|it|es|fr|de|no|sv|da",  # Wyklucza lokalny spam bez dystrybucji globalnej
-    "popularity.gte": 3.0,
+    "popularity.gte": 5.0,
     "sort_by": "popularity.desc"
 }
 items_up_movies = discover_media("movie", params_up_movies, max_pages=100)
@@ -503,7 +503,7 @@ params_up_new_series = {
     "without_genres": exclude_genres_str,
     "without_keywords": exclude_keywords_str,
     "with_original_language": "en|pl|cs|sk|hr|hu|it|es|fr|de|no|sv|da",  # Wyklucza lokalny spam
-    "popularity.gte": 3.0,
+    "popularity.gte": 5.0,
     "sort_by": "popularity.desc"
 }
 items_up_new_series = discover_media("tv", params_up_new_series, max_pages=100)
@@ -524,7 +524,7 @@ params_up_returning_series = {
     "without_genres": exclude_genres_str,
     "without_keywords": exclude_keywords_str,
     "with_original_language": "en|pl|cs|sk|hr|hu|it|es|fr|de|no|sv|da",
-    "popularity.gte": 3.0,
+    "popularity.gte": 5.0,
     "sort_by": "popularity.desc"
 }
 items_up_returning_series = discover_media("tv", params_up_returning_series, max_pages=100)
