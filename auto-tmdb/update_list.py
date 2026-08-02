@@ -390,9 +390,8 @@ params_up_movies = {
     "release_date.gte": upcoming_start,
     "release_date.lte": upcoming_end,
     "without_keywords": exclude_keywords_str,
-    "with_release_type": "2|3|4",  # Tylko premiery (Kino/Digital), bez powtórek
     "with_original_language": "en|pl|no|sv|da",  # Wyklucza lokalny spam bez dystrybucji globalnej
-    "popularity.gte": 10.0,
+    "popularity.gte": 20.0,
     "sort_by": "popularity.desc"
 }
 items_up_movies = discover_media("movie", params_up_movies, max_pages=100)
@@ -405,7 +404,7 @@ if items_up_movies:
 time.sleep(0.5)
     
     # 2. ZUPEŁNIE NOWE SERIALE (Tylko Debiuty / Sezon 1)
-list_upcoming_new_series = f"Nadchodzące Premiery - Nowe Seriale ({CURRENT_YEAR})"
+list_upcoming_new_series = f"Nadchodzące Premiery - Seriale ({CURRENT_YEAR})"
 params_up_new_series = {
     "first_air_date.gte": upcoming_start,
     "first_air_date.lte": upcoming_end,
