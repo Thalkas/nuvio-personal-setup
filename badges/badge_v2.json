@@ -1387,56 +1387,56 @@
       "type": "filter"
     },
     {
-      "id": "lang_english",
-      "name": "English Audio",
-      "groupId": "glang",
-      "isEnabled": true,
-      "pattern": "(?s)^(?=.*⁣⁢⁠‌‌‌⁤)",
-      "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png",
-      "type": "filter",
-      "tagColor": "#000000",
-      "borderColor": "#BBDEFB",
-      "textColor": "#FFFFFF",
-      "tagStyle": "bordered"
-    },
-    {
-      "id": "lang_polish",
-      "name": "Polish Audio",
-      "groupId": "glang",
-      "isEnabled": true,
-      "pattern": "(?s)^(?=.*⁣⁢‌⁠‌‍⁤)",
-      "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png",
-      "type": "filter",
-      "tagColor": "#000000",
-      "borderColor": "#BBDEFB",
-      "textColor": "#FFFFFF",
-      "tagStyle": "bordered"
-    },
-    {
-      "id": "sub_english",
-      "name": "English Subtitles",
-      "groupId": "gsub",
-      "isEnabled": true,
-      "pattern": "(?s)^(?=.*⁣⁢⁠‌‌‌⁤)",
-      "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png",
-      "type": "filter",
-      "tagColor": "#000000",
-      "borderColor": "#BBDEFB",
-      "textColor": "#FFFFFF",
-      "tagStyle": "bordered"
-    },
-    {
-      "id": "sub_polish",
-      "name": "Polish Subtitles",
-      "groupId": "gsub",
-      "isEnabled": true,
-      "pattern": "(?s)^(?=.*⁣‌‌⁠‌‍⁤)",
-      "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png",
-      "type": "filter",
-      "tagColor": "#000000",
-      "borderColor": "#BBDEFB",
-      "textColor": "#FFFFFF",
-      "tagStyle": "bordered"
-    }
+        "id": "lang_english",
+        "name": "English Audio",
+        "groupId": "glang",
+        "isEnabled": true,
+        "pattern": "(?s)^(?=.*⁣⁢⁠‌‌‌⁤)",
+        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png",
+        "type": "filter",
+        "tagColor": "#000000",
+        "borderColor": "#BBDEFB",
+        "textColor": "#FFFFFF",
+        "tagStyle": "bordered"
+      },
+      {
+        "id": "lang_polish",
+        "name": "Polish Audio",
+        "groupId": "glang",
+        "isEnabled": true,
+        "pattern": "(?s)^(?=.*⁣⁢‌⁠‌‍⁤)",
+        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png",
+        "type": "filter",
+        "tagColor": "#000000",
+        "borderColor": "#BBDEFB",
+        "textColor": "#FFFFFF",
+        "tagStyle": "bordered"
+      },
+      {
+        "id": "sub_english",
+        "name": "English Subtitles",
+        "groupId": "gsub",
+        "isEnabled": true,
+        "pattern": "(?s)^(?=.*⁣‌‌⁠‌‌‌⁤)",
+        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png",
+        "type": "filter",
+        "tagColor": "#000000",
+        "borderColor": "#BBDEFB",
+        "textColor": "#FFFFFF",
+        "tagStyle": "bordered"
+      },
+      {
+        "id": "sub_polish",
+        "name": "Polish Subtitles",
+        "groupId": "gsub",
+        "isEnabled": true,
+        "pattern": "(?s)^(?=.*⁣‌‌⁠‌‍⁤)",
+        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png",
+        "type": "filter",
+        "tagColor": "#000000",
+        "borderColor": "#BBDEFB",
+        "textColor": "#FFFFFF",
+        "tagStyle": "bordered"
+      }
   ]
 }
