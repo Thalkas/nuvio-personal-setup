@@ -1431,7 +1431,7 @@
         "groupId": "gsub",
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣‌‌⁠‌‍⁤)",
-        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png"
+        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png",
         "type": "filter",
         "tagColor": "#000000",
         "borderColor": "#F6FF4F",
