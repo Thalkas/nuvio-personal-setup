@@ -1395,7 +1395,7 @@
         "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png"
         "borderColor": "#F47521",
         "textColor": "#FFFFFF",
-        "tagStyle": "bordered",
+        "tagStyle": "bordered"
       },
       {
         "id": "lang_polish",
@@ -1406,7 +1406,7 @@
         "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png"
         "borderColor": "#F47521",
         "textColor": "#FFFFFF",
-        "tagStyle": "bordered",
+        "tagStyle": "bordered"
       },
       {
         "id": "sub_english",
