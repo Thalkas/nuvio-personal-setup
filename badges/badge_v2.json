@@ -1802,19 +1802,19 @@
       "textColor": "#FFFFFF",
       "tagStyle": "bordered"
     },
-    {
-      "id": "lang_polish",
-      "name": "Polish",
-      "groupId": "glang",
-      "isEnabled": true,
-      "pattern": "(?s)^(?=.*⁣⁢‌⁠‌‍⁤)",
-      "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png",
-      "type": "filter",
-      "tagColor": "#000000",
-      "borderColor": "#BBDEFB",
-      "textColor": "#FFFFFF",
-      "tagStyle": "bordered"
-    },
+{
+    "id": "lang_polish",
+    "name": "Polish",
+    "groupId": "glang",
+    "isEnabled": true,
+    "pattern": "(?s)^(?=.*⁣⁢‌⁠‌‍⁤)",
+    "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png",
+    "type": "filter",
+    "tagColor": "#000000",
+    "borderColor": "#BBDEFB",
+    "textColor": "#FFFFFF",
+    "tagStyle": "bordered"
+  },
     {
       "id": "lang_czech",
       "name": "Czech",
@@ -2426,19 +2426,19 @@
       "textColor": "#FFFFFF",
       "tagStyle": "bordered"
     },
-    {
-      "id": "sub_polish",
-      "name": "Polish",
-      "groupId": "gsub",
-      "isEnabled": true,
-      "pattern": "(?s)^(?=.*S⁣⁣‌⁠)",
-      "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png",
-      "type": "filter",
-      "tagColor": "#000000",
-      "borderColor": "#BBDEFB",
-      "textColor": "#FFFFFF",
-      "tagStyle": "bordered"
-    },
+{
+    "id": "sub_polish",
+    "name": "Polish Subtitles",
+    "groupId": "gsub",
+    "isEnabled": true,
+    "pattern": "(?s)^(?=.*⁣‌‌⁠‌‍⁤)",
+    "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png",
+    "type": "filter",
+    "tagColor": "#000000",
+    "borderColor": "#BBDEFB",
+    "textColor": "#FFFFFF",
+    "tagStyle": "bordered"
+  },
     {
       "id": "sub_czech",
       "name": "Czech",
