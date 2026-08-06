@@ -2015,7 +2015,7 @@
       "name": "English",
       "groupId": "gsub",
       "isEnabled": true,
-      "pattern": "(?s)^(?=.*⁣⁣⁠‌‌‌⁤)",
+      "pattern": "(?s)^(?=.*⁣‌⁠‌‌‌⁤)",
       "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png",
       "type": "filter",
       "tagColor": "#000000",
