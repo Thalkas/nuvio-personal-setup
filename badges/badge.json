@@ -1393,7 +1393,12 @@
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣⁢⁠‌‌‌⁤)",
         "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png"
-      },
+        "type": "filter",
+        "tagColor": "#000000",
+        "borderColor": "#9E4AFF",
+        "textColor": "#FFFFFF",
+        "tagStyle": "bordered"  
+    },
       {
         "id": "lang_polish",
         "name": "Polish Audio",
@@ -1401,6 +1406,11 @@
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣⁢‌⁠‌‍⁤)",
         "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png"
+        "type": "filter",
+        "tagColor": "#000000",
+        "borderColor": "#9E4AFF",
+        "textColor": "#FFFFFF",
+        "tagStyle": "bordered"  
       },
       {
         "id": "sub_english",
@@ -1409,6 +1419,11 @@
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣‌‌⁠‌‌‌⁤)",
         "imageURL": "https://raw.githubusercontent.com/Thalkas/nuvio-personal-setup/refs/heads/main/badges/subtitles/english.png"
+        "type": "filter",
+        "tagColor": "#000000",
+        "borderColor": "#F6FF4F",
+        "textColor": "#FFFFFF",
+        "tagStyle": "bordered"  
       },
       {
         "id": "sub_polish",
@@ -1417,6 +1432,11 @@
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣‌‌⁠‌‍⁤)",
         "imageURL": "https://raw.githubusercontent.com/Thalkas/nuvio-personal-setup/refs/heads/main/badges/subtitles/polish.png"
+        "type": "filter",
+        "tagColor": "#000000",
+        "borderColor": "#F6FF4F",
+        "textColor": "#FFFFFF",
+        "tagStyle": "bordered"  
       }
   ]
 }
