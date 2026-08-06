@@ -76,6 +76,13 @@
       "id": "glang",
       "isExpanded": true,
       "name": "Language"
+    },
+    {
+      "borderColor": "#000000",
+      "color": "#000000",
+      "id": "gsub",
+      "isExpanded": true,
+      "name": "Subtitle"
     }
   ],
   "filters": [
