@@ -1392,7 +1392,7 @@
         "groupId": "glang",
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣⁢⁠‌‌‌⁤)",
-        "imageURL": "https://raw.githubusercontent.com/Thalkas/nuvio-personal-setup/refs/heads/main/badges/subtitles/english.png"
+        "imageURL": "https://raw.githubusercontent.com/Thalkas/nuvio-personal-setup/refs/heads/main/badges/subtitles/english.png",
         "type": "filter",
         "tagColor": "#000000",
         "borderColor": "#9E4AFF",
@@ -1405,7 +1405,7 @@
         "groupId": "glang",
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣⁢‌⁠‌‍⁤)",
-        "imageURL": "https://raw.githubusercontent.com/Thalkas/nuvio-personal-setup/refs/heads/main/badges/subtitles/polish.png"
+        "imageURL": "https://raw.githubusercontent.com/Thalkas/nuvio-personal-setup/refs/heads/main/badges/subtitles/polish.png",
         "type": "filter",
         "tagColor": "#000000",
         "borderColor": "#9E4AFF",
@@ -1418,7 +1418,7 @@
         "groupId": "gsub",
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣‌‌⁠‌‌‌⁤)",
-        "imageURL": "https://raw.githubusercontent.com/Thalkas/nuvio-personal-setup/refs/heads/main/badges/subtitles/senglish.png"
+        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png",
         "type": "filter",
         "tagColor": "#000000",
         "borderColor": "#F6FF4F",
@@ -1431,7 +1431,7 @@
         "groupId": "gsub",
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣‌‌⁠‌‍⁤)",
-        "imageURL": "https://raw.githubusercontent.com/Thalkas/nuvio-personal-setup/refs/heads/main/badges/subtitles/spolish.png"
+        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png"
         "type": "filter",
         "tagColor": "#000000",
         "borderColor": "#F6FF4F",
