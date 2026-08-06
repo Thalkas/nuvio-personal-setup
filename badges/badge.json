@@ -1393,9 +1393,6 @@
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣⁢⁠‌‌‌⁤)",
         "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png"
-        "borderColor": "#F47521",
-        "textColor": "#FFFFFF",
-        "tagStyle": "bordered"
       },
       {
         "id": "lang_polish",
@@ -1404,9 +1401,6 @@
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣⁢‌⁠‌‍⁤)",
         "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png"
-        "borderColor": "#F47521",
-        "textColor": "#FFFFFF",
-        "tagStyle": "bordered"
       },
       {
         "id": "sub_english",
