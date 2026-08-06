@@ -1414,7 +1414,7 @@
         "groupId": "gsub",
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣‌‌⁠‌‌‌⁤)",
-        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png"
+        "imageURL": "https://raw.githubusercontent.com/Thalkas/nuvio-personal-setup/refs/heads/main/badges/subtitles/english.png"
       },
       {
         "id": "sub_polish",
@@ -1422,7 +1422,7 @@
         "groupId": "gsub",
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣‌‌⁠‌‍⁤)",
-        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png"
+        "imageURL": "https://raw.githubusercontent.com/Thalkas/nuvio-personal-setup/refs/heads/main/badges/subtitles/polish.png"
       }
   ]
 }
