@@ -1392,12 +1392,7 @@
         "groupId": "glang",
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣⁢⁠‌‌‌⁤)",
-        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png",
-        "type": "filter",
-        "tagColor": "#000000",
-        "borderColor": "#BBDEFB",
-        "textColor": "#FFFFFF",
-        "tagStyle": "bordered"
+        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png"
       },
       {
         "id": "lang_polish",
@@ -1405,12 +1400,7 @@
         "groupId": "glang",
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣⁢‌⁠‌‍⁤)",
-        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png",
-        "type": "filter",
-        "tagColor": "#000000",
-        "borderColor": "#BBDEFB",
-        "textColor": "#FFFFFF",
-        "tagStyle": "bordered"
+        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png"
       },
       {
         "id": "sub_english",
@@ -1418,12 +1408,7 @@
         "groupId": "gsub",
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣‌‌⁠‌‌‌⁤)",
-        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png",
-        "type": "filter",
-        "tagColor": "#000000",
-        "borderColor": "#BBDEFB",
-        "textColor": "#FFFFFF",
-        "tagStyle": "bordered"
+        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/english.png"
       },
       {
         "id": "sub_polish",
@@ -1431,12 +1416,7 @@
         "groupId": "gsub",
         "isEnabled": true,
         "pattern": "(?s)^(?=.*⁣‌‌⁠‌‍⁤)",
-        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png",
-        "type": "filter",
-        "tagColor": "#000000",
-        "borderColor": "#BBDEFB",
-        "textColor": "#FFFFFF",
-        "tagStyle": "bordered"
+        "imageURL": "https://raw.githubusercontent.com/kingsizew/badges/main/badge-images/language/polish.png"
       }
   ]
 }
